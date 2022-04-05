@@ -9,7 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LoginFormType extends AbstractType
@@ -23,23 +22,13 @@ class LoginFormType extends AbstractType
                     new NotBlank([
                         'message' => 'Please enter a email',
                     ]),
-                    new Length([
-                                   'min' => 2,
-                                   'minMessage' => 'Your email should be at least {{ limit }} characters',
-                                   'max' => 50,
-                               ]),
                 ],
             ])
             ->add('password', PasswordType::class, [
                 'constraints' => [
                     new NotBlank([
-                                     'message' => 'Please enter a surname',
-                                 ]),
-                    new Length([
-                                   'min' => 6,
-                                   'minMessage' => 'Your surname should be at least {{ limit }} characters',
-                                   'max' => 4096,
-                               ]),
+                        'message' => 'Please enter a password',
+                    ]),
                 ],
             ])
             ->add('Login', SubmitType::class);
