@@ -15,5 +15,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "bootstrap-autocomplete": "^2.3.7"
     }
 }
