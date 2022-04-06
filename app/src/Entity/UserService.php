@@ -13,13 +13,13 @@ class UserService
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'Services')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'Users')]
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private $Service;
+    private $service;
 
     public function getId(): ?int
     {
@@ -40,12 +40,12 @@ class UserService
 
     public function getService(): ?Service
     {
-        return $this->Service;
+        return $this->service;
     }
 
-    public function setService(?Service $Service): self
+    public function setService(?Service $service): self
     {
-        $this->Service = $Service;
+        $this->service = $service;
 
         return $this;
     }

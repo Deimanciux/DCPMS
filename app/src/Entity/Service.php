@@ -27,12 +27,12 @@ class Service
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $is_active;
 
-    #[ORM\OneToMany(mappedBy: 'Service', targetEntity: UserService::class, orphanRemoval: true)]
-    private $Users;
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: UserService::class, orphanRemoval: true)]
+    private $users;
 
     public function __construct()
     {
-        $this->Users = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,13 +93,13 @@ class Service
      */
     public function getUsers(): Collection
     {
-        return $this->Users;
+        return $this->users;
     }
 
     public function addUser(UserService $user): self
     {
-        if (!$this->Users->contains($user)) {
-            $this->Users[] = $user;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
             $user->setService($this);
         }
 
@@ -108,7 +108,7 @@ class Service
 
     public function removeUser(UserService $user): self
     {
-        if ($this->Users->removeElement($user)) {
+        if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
             if ($user->getService() === $this) {
                 $user->setService(null);

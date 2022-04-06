@@ -9,10 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/', name: 'app_index')]
-    public function index(): Response
-    {
-        return $this->render('index/index.html.twig');
-    }
+//    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+//    #[Route('/', name: 'app_index')]
+//    public function index(): Response
+//    {
+//        return $this->render('index/landing.html.twig');
+//    }
 }
