@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use \DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -65,6 +67,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserService::class, orphanRemoval: true)]
+    private $services;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: RelatedUser::class, orphanRemoval: true)]
+    private $relatedUsers;
+
+    public function __construct()
+    {
+        $this->services = new ArrayCollection();
+        $this->relatedUsers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -196,6 +210,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserService>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(UserService $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(UserService $service): self
+    {
+        if ($this->services->removeElement($service)) {
+            // set the owning side to null (unless already changed)
+            if ($service->getUser() === $this) {
+                $service->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelatedUser>
+     */
+    public function getRelatedUsers(): Collection
+    {
+        return $this->relatedUsers;
+    }
+
+    public function addRelatedUser(RelatedUser $relatedUser): self
+    {
+        if (!$this->relatedUsers->contains($relatedUser)) {
+            $this->relatedUsers[] = $relatedUser;
+            $relatedUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelatedUser(RelatedUser $relatedUser): self
+    {
+        if ($this->relatedUsers->removeElement($relatedUser)) {
+            // set the owning side to null (unless already changed)
+            if ($relatedUser->getUser() === $this) {
+                $relatedUser->setUser(null);
+            }
+        }
 
         return $this;
     }
