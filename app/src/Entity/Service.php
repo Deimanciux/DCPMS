@@ -30,9 +30,13 @@ class Service
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: UserService::class, orphanRemoval: true)]
     private $users;
 
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: ServiceImage::class, orphanRemoval: true)]
+    private $serviceImages;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->serviceImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +116,36 @@ class Service
             // set the owning side to null (unless already changed)
             if ($user->getService() === $this) {
                 $user->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ServiceImage>
+     */
+    public function getServiceImages(): Collection
+    {
+        return $this->serviceImages;
+    }
+
+    public function addServiceImage(ServiceImage $serviceImage): self
+    {
+        if (!$this->serviceImages->contains($serviceImage)) {
+            $this->serviceImages[] = $serviceImage;
+            $serviceImage->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeServiceImage(ServiceImage $serviceImage): self
+    {
+        if ($this->serviceImages->removeElement($serviceImage)) {
+            // set the owning side to null (unless already changed)
+            if ($serviceImage->getService() === $this) {
+                $serviceImage->setService(null);
             }
         }
 

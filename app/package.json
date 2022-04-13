@@ -17,6 +17,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "bootstrap-autocomplete": "^2.3.7"
+        "bootstrap-autocomplete": "^2.3.7",
+        "fullcalendar": "^5.11.0"
     }
 }
