@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\AdminDashboard;
 
-use App\Entity\Diagnosis;
+use App\Entity\RelatedUser;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class DiagnosisCrudController extends AbstractCrudController
+class RelatedUserCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Diagnosis::class;
+        return RelatedUser::class;
     }
 
     /*

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\AdminDashboard;
 
 use App\Entity\HealthRecord;
 use App\Entity\Position;
@@ -26,7 +26,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Dental Clinic Admin');
+            ->setTitle('Dental Clinic AdminDashboard');
     }
 
     //TODO configure avatar picture
