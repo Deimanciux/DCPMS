@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\AdminDashboard;
 
-use App\Entity\Tooth;
+use App\Entity\Diagnosis;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class ToothCrudController extends AbstractCrudController
+class DiagnosisCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Tooth::class;
+        return Diagnosis::class;
     }
 
     /*

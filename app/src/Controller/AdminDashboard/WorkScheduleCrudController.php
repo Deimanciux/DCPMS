@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\AdminDashboard;
 
 use App\Entity\WorkSchedule;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\AdminDashboard;
 
-use App\Entity\UserService;
+use App\Entity\HealthRecord;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class UserServiceCrudController extends AbstractCrudController
+class HealthRecordCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return UserService::class;
+        return HealthRecord::class;
     }
 
     /*
