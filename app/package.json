@@ -17,7 +17,11 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "bootstrap-autocomplete": "^2.3.7",
-        "fullcalendar": "^5.11.0"
+        "@fullcalendar/core": "^5.11.0",
+        "@fullcalendar/daygrid": "^5.11.0",
+        "@fullcalendar/interaction": "^5.11.0",
+        "@fullcalendar/list": "^5.11.0",
+        "@fullcalendar/timegrid": "^5.11.0",
+        "bootstrap-autocomplete": "^2.3.7"
     }
 }
