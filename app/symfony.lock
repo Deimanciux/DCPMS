@@ -410,6 +410,9 @@
     "symfonycasts/verify-email-bundle": {
         "version": "v1.10.0"
     },
+    "twbs/bootstrap": {
+        "version": "v5.0.2"
+    },
     "twig/twig": {
         "version": "v3.3.9"
     }

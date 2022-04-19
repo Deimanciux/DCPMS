@@ -1,8 +1,20 @@
-{% extends '@EasyAdmin/page/content.html.twig' %}
+{% extends '@!EasyAdmin/page/content.html.twig' %}
 
-{% block content_title %}Reservations{% endblock %}
+{% block content_title %}
+    <div class = "container">
+        <div class="row">
+            <div class="col-6 text-left content-header-title">
+                <h1 class="title">Reservations</h1>
+            </div>
+            <div class="col-6 text-right">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">New Reservation</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block main %}
+    {{ include('patient-dashboard/reservation_form.html.twig') }}
     <div class="container">
         <div class="row">
             <div id="calendar"></div>

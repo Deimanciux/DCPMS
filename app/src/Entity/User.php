@@ -74,10 +74,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: RelatedUser::class, orphanRemoval: true)]
     private $relatedUsers;
 
+    #[ORM\OneToMany(mappedBy: 'relation', targetEntity: Reservation::class, orphanRemoval: true)]
+    private $reservations;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->relatedUsers = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -268,6 +272,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($relatedUser->getUser() === $this) {
                 $relatedUser->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getRelation() === $this) {
+                $reservation->setRelation(null);
             }
         }
 
