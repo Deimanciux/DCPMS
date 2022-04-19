@@ -1,11 +1,11 @@
-import { Calendar } from '@fullcalendar/core';
+import * as FullCalendar from "@fullcalendar/core";
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
 let calendarEl = document.getElementById('calendar');
-let calendar = new Calendar(calendarEl, {
+let calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin ],
     initialView: 'timeGridWeek',
     selectable: true,
@@ -15,13 +15,22 @@ let calendar = new Calendar(calendarEl, {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,listWeek'
     },
+    //initial data
     events: [
-        { // this object will be "parsed" into an Event Object
-            title: 'The Title', // a property!
-            start: '2022-04-13', // a property!
-            end: '2022-04-04' // a property! ** see important note below about 'end' **
+        {
+            id: '1',
+            title: 'The Title',
+            start: '2022-04-13 10:20',
+            end: '2022-04-14 10:20'
         }
     ]
 });
 
 calendar.render();
+//custom data
+calendar.addEvent({
+    title: 'Event1',
+    start: '2022-04-19'
+});
+
+document.getElementById('reservation_datetime').setAttribute('type', 'datetime-local')
