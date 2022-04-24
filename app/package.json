@@ -1,11 +1,13 @@
 {
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
+        "@popperjs/core": "^2.11.5",
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/webpack-encore": "^1.7.0",
-        "bootstrap": "^5.1.3",
+        "bootstrap": "^5.1.0",
         "core-js": "^3.0.0",
         "css-loader": "^6.7.1",
+        "file-loader": "^6.0.0",
         "jquery": "^3.6.0",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.50.1",
@@ -26,8 +28,6 @@
         "@fullcalendar/daygrid": "^5.11.0",
         "@fullcalendar/interaction": "^5.11.0",
         "@fullcalendar/list": "^5.11.0",
-        "@fullcalendar/timegrid": "^5.11.0",
-        "@popperjs/core": "^2.11.5",
-        "bootstrap-autocomplete": "^2.3.7"
+        "@fullcalendar/timegrid": "^5.11.0"
     }
 }

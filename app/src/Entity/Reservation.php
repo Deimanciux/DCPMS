@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -11,25 +12,33 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $title;
-
-    #[ORM\Column(type: 'datetime')]
-    private $DateTime;
+    private ?string $title;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private UserInterface $user;
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private $service;
+    private Service $service;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeInterface $startDate;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeInterface $endDate;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getTitle(): ?string
@@ -44,24 +53,24 @@ class Reservation
         return $this;
     }
 
-    public function getDateTime(): ?\DateTimeInterface
+    public function getStartDate(): \DateTimeInterface
     {
-        return $this->DateTime;
+        return $this->startDate;
     }
 
-    public function setDateTime(\DateTimeInterface $DateTime): self
+    public function setStartDate(\DateTimeInterface $startDate): self
     {
-        $this->DateTime = $DateTime;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
 
@@ -76,6 +85,18 @@ class Reservation
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getEndDate(): \DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(\DateTimeInterface $endDate): self
+    {
+        $this->endDate = $endDate;
 
         return $this;
     }

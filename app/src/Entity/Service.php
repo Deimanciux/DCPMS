@@ -36,6 +36,9 @@ class Service
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Reservation::class, orphanRemoval: true)]
     private $reservations;
 
+    #[ORM\Column(type: 'integer')]
+    private $duration;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -182,6 +185,18 @@ class Service
                 $reservation->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }
