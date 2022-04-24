@@ -1,13 +1,14 @@
 {% extends '@!EasyAdmin/page/content.html.twig' %}
 
 {% block content_title %}
-    <div class = "container">
-        <div class="row">
+    <div class = "container p-0">
+        <div id="calendar_alert" style="font-size: 14px; display: none" class="alert alert-danger" role="alert"></div>
+        <div class="row p-0">
             <div class="col-6 text-left content-header-title">
-                <h1 class="title">Reservations</h1>
+                <h1 class="title">Reservation</h1>
             </div>
             <div class="col-6 text-right">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">New Reservation</button>
+                <button type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">New Reservation</button>
             </div>
         </div>
     </div>
@@ -15,9 +16,7 @@
 
 {% block main %}
     {{ include('patient-dashboard/reservation_form.html.twig') }}
-    <div class="container">
         <div class="row">
             <div id="calendar"></div>
         </div>
-    </div>
 {% endblock %}
