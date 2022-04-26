@@ -22,6 +22,14 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
     selectable: true,
     editable: true,
+    eventConstraint: 'businessHours',
+    slotMinTime: "07:00:00",
+    slotMaxTime: "22:00:00",
+    scrollTimeReset: false,
+    eventOverlap: function(stillEvent, movingEvent) {
+        display_error(null, 'Reservations can not overlap', calendar_alert_danger);
+        return false;
+    },
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
