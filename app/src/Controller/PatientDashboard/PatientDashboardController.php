@@ -4,6 +4,7 @@ namespace App\Controller\PatientDashboard;
 
 use App\Entity\HealthRecord;
 use App\Entity\User;
+use App\Repository\ServiceRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -15,10 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PatientDashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private ServiceRepository $repository
+    ) {
+    }
+
     #[Route('/', name: 'patient_dashboard')]
     public function index(): Response
     {
-        return $this->render('patient-dashboard/service.html.twig');
+        return $this->render('patient-dashboard/service.html.twig', [
+            'services' => $this->repository->findActiveServices(),
+        ]);
     }
 
     public function configureDashboard(): Dashboard
