@@ -45,6 +45,18 @@ class ServiceRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Service[] Returns an array of Reservation objects
+     */
+    public function findActiveServices(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.is_active = :val')
+            ->setParameter('val', true)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Service[] Returns an array of Service objects
     //  */

@@ -51,31 +51,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 50)]
     private string $email;
 
+    #[Assert\NotBlank]
+    #[ORM\Column(type: "string", length: 50, nullable: true)]
+    private ?string $avatar;
+
     #[Assert\DateTime]
-    #[ORM\Column(type: "datetime", length: 50, nullable: true)]
-    private DateTime $dateOfBirth;
+    #[ORM\Column(type: "datetime_immutable", length: 50, nullable: true)]
+    private ?\DateTimeImmutable $dateOfBirth;
 
     #[ORM\Column(type: "string", length: 4096)]
     private string $password;
 
     #[Assert\Length(min: 8, max: 50)]
-    #[Assert\NotBlank]
     private ?string $plainPassword;
 
     #[ORM\Column(type: "json")]
     private array $roles = [];
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserService::class, orphanRemoval: true)]
-    private $services;
+    private Collection $services;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: RelatedUser::class, orphanRemoval: true)]
-    private $relatedUsers;
+    private Collection $relatedUsers;
 
     #[ORM\OneToMany(mappedBy: 'relation', targetEntity: Reservation::class, orphanRemoval: true)]
-    private $reservations;
+    private Collection $reservations;
 
     public function __construct()
     {
@@ -196,12 +199,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->phone = $phone;
     }
 
-    public function getDateOfBirth(): DateTime
+    public function getDateOfBirth(): ?\DateTimeImmutable
     {
         return $this->dateOfBirth;
     }
 
-    public function setDateOfBirth(DateTime $dateOfBirth): void
+    public function setDateOfBirth(?\DateTimeImmutable $dateOfBirth): void
     {
         $this->dateOfBirth = $dateOfBirth;
     }
@@ -306,5 +309,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAvatarUrl(): ?string
+    {
+        if (!$this->avatar) {
+            return null;
+        }
+
+        if (str_contains($this->avatar, '/')) {
+            return $this->avatar;
+        }
+
+        return sprintf('/images/users/%s', $this->avatar);
+    }
+
+    /**
+     * @param string $avatar
+     */
+    public function setAvatar(string $avatar): void
+    {
+        $this->avatar = $avatar;
     }
 }

@@ -13,31 +13,31 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $title;
+    private string  $title;
 
     #[ORM\Column(type: 'string', length: 2000, nullable: true)]
-    private $description;
+    private ?string $description;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private $price;
+    private ?float $price;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $is_active;
+    private ?bool $is_active;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: UserService::class, orphanRemoval: true)]
-    private $users;
+    private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: ServiceImage::class, orphanRemoval: true)]
-    private $serviceImages;
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: ServiceImage::class, cascade: ["persist"], orphanRemoval: true)]
+    private Collection $serviceImages;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Reservation::class, orphanRemoval: true)]
-    private $reservations;
+    private Collection $reservations;
 
     #[ORM\Column(type: 'integer')]
-    private $duration;
+    private int $duration;
 
     public function __construct()
     {
@@ -46,12 +46,12 @@ class Service
         $this->reservations = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -179,11 +179,8 @@ class Service
 
     public function removeReservation(Reservation $reservation): self
     {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getService() === $this) {
-                $reservation->setService(null);
-            }
+        if ($this->reservations->removeElement($reservation) && $reservation->getService() === $this) {
+            $reservation->setService(null);
         }
 
         return $this;
