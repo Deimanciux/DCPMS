@@ -14,6 +14,9 @@ let form = $('form[name="reservation"]')
 let reservation_alert_danger = $('#reservation_alert');
 let calendar_alert_danger = $('#calendar_alert');
 let empty_value_message = ' can not be empty';
+let calendar_container = $('#calendar');
+let reservation_doctor = $('#reservation_doctor');
+let reservation_doctor_option = $('#reservation_doctor option');
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -51,7 +54,8 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
             endTime: '18:00'
         },
     ],
-    eventClick: function(info) {
+    eventClick: async function(info) {
+        await getDoctorsByService(reservation_service.val())
         setValues(info.event);
         new bootstrap.Modal($('#exampleModal')).show();
     },
@@ -95,6 +99,7 @@ function sendReservationEditRequest(event) {
         data: JSON.stringify({
             title : event.title,
             service: event.extendedProps.service,
+            doctor: event.extendedProps.doctor,
             start : event.start.toISOString(),
             end : event.end.toISOString(),
         }),
@@ -113,20 +118,42 @@ async function sendReservationDeleteRequest(id) {
         url: "/reservation/" + id,
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-            console.log(response)
         },
         error: function (response) {
         }
     });
 }
 
+async function getDoctorsByService(id) {
+    await $.ajax({
+        method: "GET",
+        url: "/service/doctors/" + id,
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            reservation_doctor.empty();
+
+            if ( response['data'].length === 0) {
+                reservation_doctor.parent().hide();
+            } else {
+                reservation_doctor.parent().show();
+            }
+
+            for (let i = 0; i < response['data'].length; i++) {
+                reservation_doctor.append(new Option(response['data'][i].name_surname, response['data'][i].id));
+            }
+        },
+        error: function (response) {
+        }
+    });
+}
 
 function setValues(event) {
-    reservation_id.val(event.id)
-    reservation_title.val(event.title)
-    reservation_startDate.val(event.start.toISOString().slice(0, 16))
-    reservation_endDate.val(event.start.toISOString().slice(0, 16))
-    reservation_service.val(event.extendedProps.service)
+    reservation_id.val(event.id);
+    reservation_title.val(event.title);
+    reservation_startDate.val(event.start.toISOString().slice(0, 16));
+    reservation_endDate.val(event.start.toISOString().slice(0, 16));
+    reservation_service.val(event.extendedProps.service);
+    reservation_doctor.val(event.extendedProps.doctor);
 }
 
 function clearValues() {
@@ -135,6 +162,7 @@ function clearValues() {
     reservation_startDate.val('')
     reservation_endDate.val('')
     reservation_service.val('')
+    reservation_doctor.parent().hide();
 }
 
 $('#new-reservation').on('click', function () {
@@ -170,6 +198,11 @@ $('#reservation_delete').on('click', async function (event) {
     form.submit();
 });
 
+reservation_service.on('change', async function (event) {
+    event.preventDefault();
+    await getDoctorsByService(reservation_service.val())
+});
+
 function display_error(parameter_name, error, element) {
     element.css("display", "block");
 
@@ -182,9 +215,23 @@ function display_error(parameter_name, error, element) {
     element.text(error)
 }
 
+function checkIfFieldsShouldBeHidden() {
+    if (reservation_id.val() === '' || reservation_doctor_option.length === 0) {
+        reservation_doctor.parent().hide();
+    } else {
+        reservation_doctor.parent().show();
+    }
+}
+
+
 async function init() {
     await getReservationsByUser();
-    calendar.render();
+
+    if (calendar_container.length !== 0) {
+        calendar.render();
+    }
+
+    checkIfFieldsShouldBeHidden();
     reservation_startDate.attr('type', 'datetime-local');
     $('.title').addClass('p-0');
 }

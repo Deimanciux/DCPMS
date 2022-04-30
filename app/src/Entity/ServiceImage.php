@@ -19,10 +19,10 @@ class ServiceImage
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'serviceImages')]
     #[ORM\JoinColumn(nullable: false)]
-    private Service $service;
+    private ?Service $service;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private string $image;
+    private ?string $image;
 
     #[UploadableField(mapping:"services", fileNameProperty: "image")]
     private File $imageFile;
@@ -44,12 +44,12 @@ class ServiceImage
         return $this->id;
     }
 
-    public function getService(): Service
+    public function getService(): ?Service
     {
         return $this->service;
     }
 
-    public function setService(Service $service): self
+    public function setService(?Service $service): self
     {
         $this->service = $service;
 
@@ -61,7 +61,7 @@ class ServiceImage
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
 

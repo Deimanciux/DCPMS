@@ -23,13 +23,17 @@ class Reservation
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private Service $service;
+    private ?Service $service = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeInterface $startDate;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeInterface $endDate;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'patientReservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $doctor;
 
     public function getId(): ?int
     {
@@ -97,6 +101,18 @@ class Reservation
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getDoctor(): ?User
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(?User $doctor): self
+    {
+        $this->doctor = $doctor;
 
         return $this;
     }

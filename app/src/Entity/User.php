@@ -80,11 +80,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'relation', targetEntity: Reservation::class, orphanRemoval: true)]
     private Collection $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Reservation::class)]
+    private Collection $patientReservations;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->relatedUsers = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->patientReservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -336,10 +340,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param string $avatar
+     * @param ?string $avatar
      */
-    public function setAvatar(string $avatar): void
+    public function setAvatar(?string $avatar): void
     {
         $this->avatar = $avatar;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getPatientReservations(): Collection
+    {
+        return $this->patientReservations;
+    }
+
+    public function addPatientReservation(Reservation $patientReservation): self
+    {
+        if (!$this->patientReservations->contains($patientReservation)) {
+            $this->patientReservations[] = $patientReservation;
+            $patientReservation->setDoctor($this);
+        }
+
+        return $this;
+    }
+
+    public function removePatientReservation(Reservation $patientReservation): self
+    {
+        if ($this->patientReservations->removeElement($patientReservation)) {
+            // set the owning side to null (unless already changed)
+            if ($patientReservation->getDoctor() === $this) {
+                $patientReservation->setDoctor(null);
+            }
+        }
+
+        return $this;
     }
 }

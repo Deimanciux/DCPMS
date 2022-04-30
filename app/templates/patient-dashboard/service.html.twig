@@ -6,20 +6,26 @@
     <div class="container">
         <div class="row">
             {% for service in services %}
-            <div class="col-lg-3 col-md-4 col-6 p-0">
-                <div class="card bg-light text-dark">
-                    <div class="card">
-                        <a href="/single-page">
-                            <img src="{{ asset(service.serviceImages[0].getImageUrl) }}" class="card-img-top">
-                            <div class="card-body">
-                                <p class="card-text text-black">
-                                    {{ service.title }}
-                                </p>
-                            </div>
-                        </a>
+                {% set url = ea_url()
+                    .setDashboard('App\\Controller\\PatientDashboard\\PatientDashboardController')
+                    .setEntityId(service.id)
+                %}
+                <div class="col-lg-3 col-md-4 col-6 p-0">
+                    <div class="card bg-light text-dark">
+                        <div class="card">
+                            <a href="{{ url }}">
+                                {% if service.serviceImages[0] is defined%}
+                                    <img style="max-width: 100%; max-height: 200px;" src="{{ asset(service.serviceImages[0].getImageUrl) }}" class="card-img-top">
+                                    <div class="card-body">
+                                        <p class="card-text text-black">
+                                            {{ service.title }}
+                                        </p>
+                                    </div>
+                                {% endif%}
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
     </div>

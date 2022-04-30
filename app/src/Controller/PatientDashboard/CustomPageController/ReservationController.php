@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Controller\PatientDashboard\CustomPageController;
 
+use App\Controller\PatientDashboard\PatientDashboardController;
 use App\DTO\ReservationDTO;
 use App\Entity\Reservation;
 use App\Entity\Service;
@@ -13,6 +14,7 @@ use App\Repository\ServiceRepository;
 use App\Service\ReservationUpdater;
 use App\Voter\ReservationVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,14 +26,18 @@ class ReservationController extends AbstractController
         private EntityManagerInterface $entityManager,
         private ReservationUpdater $reservationUpdater,
         private ReservationRepository $reservationRepository,
-        private ServiceRepository $serviceRepository
+        private ServiceRepository $serviceRepository,
+        private AdminUrlGenerator $adminUrlGenerator,
     ) {
     }
 
     #[Route('/patient-reservations', name: 'app_patient_reservation')]
     public function index(Request $request): Response
     {
-        $form = $this->createForm(ReservationType::class);
+        $form = $this->createForm(ReservationType::class, new Reservation(), [
+            'action' => $this->generateUrl('app_patient_reservation')
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,17 +59,30 @@ class ReservationController extends AbstractController
                         $reservation->getUser(),
                         $reservation->getService(),
                         $reservation->getStartDate(),
-                        $reservation->getEndDate()
+                        $reservation->getEndDate(),
+                        $reservation->getDoctor(),
                     )
                 );
 
-                return $this->render('patient-dashboard/reservation_calendar.html.twig', [
-                    'form' => $form->createView(),
-                ]);
+                return $this->redirect(
+                    $this->adminUrlGenerator
+                        ->setDashboard(PatientDashboardController::class)
+                        ->setController(ReservationController::class)
+                        ->setRoute('app_patient_reservation')
+                        ->generateUrl()
+                );
             }
 
             $this->entityManager->persist($reservation);
             $this->entityManager->flush();
+
+            return $this->redirect(
+                $this->adminUrlGenerator
+                    ->setDashboard(PatientDashboardController::class)
+                    ->setController(ReservationController::class)
+                    ->setRoute('app_patient_reservation')
+                    ->generateUrl()
+            );
         }
 
         return $this->render('patient-dashboard/reservation_calendar.html.twig', [
@@ -155,7 +174,8 @@ class ReservationController extends AbstractController
                 'title' => $reservation->getTitle(),
                 'start' => $reservation->getStartDate()->format('Y-m-d\TH:i'),
                 'end' => $reservation->getEndDate()->format('Y-m-d\TH:i'),
-                'service' => $reservation->getService()->getId()
+                'service' => $reservation->getService()->getId(),
+                'doctor' => $reservation->getDoctor()->getId()
             ];
         }
 
