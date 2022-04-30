@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DTO;
 
 use App\Entity\Service;
+use App\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ReservationDTO
@@ -16,6 +17,7 @@ class ReservationDTO
         private ?Service $service,
         private \DateTimeInterface $startDate,
         private \DateTimeInterface $endDate,
+        private User $doctor
     ) {
     }
 
@@ -47,5 +49,15 @@ class ReservationDTO
     public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
+    }
+
+    public function getDoctor(): User
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(User $doctor): void
+    {
+        $this->doctor = $doctor;
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Controller\PatientDashboard;
 
 use App\Entity\HealthRecord;
+use App\Entity\Reservation;
+use App\Entity\Service;
 use App\Entity\User;
+use App\Form\ReservationType;
 use App\Repository\ServiceRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -17,13 +20,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class PatientDashboardController extends AbstractDashboardController
 {
     public function __construct(
-        private ServiceRepository $repository
+        private ServiceRepository $repository,
     ) {
     }
 
     #[Route('/', name: 'patient_dashboard')]
     public function index(): Response
     {
+        if (isset($_GET['entityId'])) {
+            $form = $this->createForm(ReservationType::class, new Reservation(), [
+                'action' => $this->generateUrl('app_patient_reservation')
+            ]);
+
+            return $this->render('patient-dashboard/single-service.html.twig', [
+                'form' => $form->createView(),
+                'service' => $this->repository->findOneBy(['id' => $_GET['entityId']]),
+            ]);
+        }
+
         return $this->render('patient-dashboard/service.html.twig', [
             'services' => $this->repository->findActiveServices(),
         ]);
@@ -53,6 +67,12 @@ class PatientDashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+        yield MenuItem::linkToCrud(
+            'Services',
+           "fa fa-suitcase",
+            Service::class
+        )->setPermission(User::ROLE_PATIENT)
+         ->setController(ServiceCrudController::class);
         yield MenuItem::linkToCrud(
             'Health Records',
             'fa fa-prescription-bottle',

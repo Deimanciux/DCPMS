@@ -44,10 +44,15 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-dashboard');
         yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
-        yield MenuItem::linkToCrud('Health Records', 'fa fa-prescription-bottle', HealthRecord::class);
+        yield MenuItem::linkToCrud(
+            'Health Records',
+            'fa fa-prescription-bottle',
+            HealthRecord::class
+        );
         yield MenuItem::linkToCrud('Diagnosis', 'fa fa-book-medical', HealthRecord::class);
         yield MenuItem::linkToCrud('Positions', 'fas fa-compress-arrows-alt', Position::class);
-        yield MenuItem::linkToCrud('Services', 'fas fa-stethoscope', Service::class);
+        yield MenuItem::linkToCrud('Services', 'fas fa-stethoscope', Service::class)
+            ->setController(ServiceCrudController::class);
         yield MenuItem::linkToCrud('Teeth', 'fas fa-tooth', Tooth::class);
         yield MenuItem::linkToCrud('Work Schedule', 'fas fa-calendar-alt', Tooth::class);
         yield MenuItem::linkToCrud('Registrations', 'fas fa-clipboard-list', Tooth::class);

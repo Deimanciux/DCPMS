@@ -4,14 +4,18 @@ namespace App\Form;
 
 use App\Entity\Reservation;
 use App\Entity\Service;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReservationType extends AbstractType
@@ -19,6 +23,7 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setAction($options['action'])
             ->add('title', TextType::class)
             ->add('startDate', DateTimeType::class, [
                 'widget' => 'single_text',
@@ -28,6 +33,10 @@ class ReservationType extends AbstractType
             ->add('service', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'title'
+            ])
+            ->add('doctor', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'name'
             ])
             ->add('id', HiddenType::class)
             ->add('save', SubmitType::class)

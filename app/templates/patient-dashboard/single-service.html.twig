@@ -1,0 +1,53 @@
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}{{ service.title }}{% endblock %}
+
+{% block main %}
+    {{ include('patient-dashboard/reservation_form.html.twig') }}
+    <div class="row">
+        <div id="carouselExampleControls" class="carousel slide col-md-5" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for key, image in service.serviceImages %}
+                    <div class="carousel-item {{ key == 0 ? 'active' : '' }} ">
+                        <img style="max-width: 100%; max-height: 400px;" src="{{ asset(image.getImageUrl) }}" class="d-block w-100" alt="...">
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div class="col-6 text-right">
+            <p style="text-align: justify;">{{ service.description }}</p>
+            <button type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Register For Appointment</button>
+        </div>
+{#        <div class="col-md-6 p-1">#}
+{#            <p style="text-align: justify;">{{ service.description }}</p>#}
+{#            <button type="button" class="btn btn-primary">Register For Appointment</button>#}
+{#        </div>#}
+    </div>
+
+    <div class="row mt-4 pt-4 content-header-title">
+        <div class="col-md-5">
+            <h3 class="title" style="font-size: var(--font-size-xxl);">Doctors</h3>
+        </div>
+    </div>
+
+    <div class="row p-1">
+        {% for user_service in service.users %}
+            <div class="col-md-3 col-6">
+                <div class="card">
+                    <img style="max-width: 100%; max-height: 200px; object-fit: cover;" src="{{ user_service.user.getAvatarUrl }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-text">{{user_service.user.name ~ ' ' ~ user_service.user.surname}}</h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

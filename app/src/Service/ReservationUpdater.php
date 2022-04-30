@@ -29,7 +29,9 @@ class ReservationUpdater
             ->setUser($reservation->getUser())
             ->setService($reservation->getService())
             ->setStartDate($reservation->getStartDate())
-            ->setEndDate($reservation->getEndDate());
+            ->setEndDate($reservation->getEndDate())
+            ->setDoctor($reservation->getDoctor())
+        ;
 
         $this->entityManager->flush();
     }
