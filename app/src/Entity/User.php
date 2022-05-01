@@ -83,12 +83,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Reservation::class)]
     private Collection $patientReservations;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: HealthRecord::class, orphanRemoval: true)]
+    private $healthRecords;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->relatedUsers = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->patientReservations = new ArrayCollection();
+        $this->healthRecords = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -371,6 +375,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($patientReservation->getDoctor() === $this) {
                 $patientReservation->setDoctor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HealthRecord>
+     */
+    public function getHealthRecords(): Collection
+    {
+        return $this->healthRecords;
+    }
+
+    public function addHealthRecord(HealthRecord $healthRecord): self
+    {
+        if (!$this->healthRecords->contains($healthRecord)) {
+            $this->healthRecords[] = $healthRecord;
+            $healthRecord->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHealthRecord(HealthRecord $healthRecord): self
+    {
+        if ($this->healthRecords->removeElement($healthRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($healthRecord->getUser() === $this) {
+                $healthRecord->setUser(null);
             }
         }
 

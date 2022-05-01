@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Controller\PatientDashboard\CustomPageController;
+namespace App\Controller\PatientDashboard;
 
 use App\Controller\PatientDashboard\PatientDashboardController;
 use App\DTO\ReservationDTO;
@@ -67,7 +67,7 @@ class ReservationController extends AbstractController
                 return $this->redirect(
                     $this->adminUrlGenerator
                         ->setDashboard(PatientDashboardController::class)
-                        ->setController(ReservationController::class)
+                        ->setController(self::class)
                         ->setRoute('app_patient_reservation')
                         ->generateUrl()
                 );
@@ -79,7 +79,7 @@ class ReservationController extends AbstractController
             return $this->redirect(
                 $this->adminUrlGenerator
                     ->setDashboard(PatientDashboardController::class)
-                    ->setController(ReservationController::class)
+                    ->setController(self::class)
                     ->setRoute('app_patient_reservation')
                     ->generateUrl()
             );

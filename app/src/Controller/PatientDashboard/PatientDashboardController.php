@@ -74,7 +74,7 @@ class PatientDashboardController extends AbstractDashboardController
         )->setPermission(User::ROLE_PATIENT)
          ->setController(ServiceCrudController::class);
         yield MenuItem::linkToCrud(
-            'Health Records',
+            'Health Records admin',
             'fa fa-prescription-bottle',
             HealthRecord::class
         )->setPermission(User::ROLE_PATIENT);
@@ -82,6 +82,11 @@ class PatientDashboardController extends AbstractDashboardController
             'Reservations',
             'fa fa-calendar-check',
             'app_patient_reservation'
+        )->setPermission(User::ROLE_PATIENT);
+        yield MenuItem::linkToRoute(
+            'Health records',
+            'fa fa-file-medical',
+            'app_health_records'
         )->setPermission(User::ROLE_PATIENT);
     }
 }

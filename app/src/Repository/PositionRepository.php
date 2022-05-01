@@ -45,22 +45,17 @@ class PositionRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Position[] Returns an array of Position objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+    * @return Position[]
+    */
+    public function findBySequenceNumber(): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->orderBy('p.sequenceNumber', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Position

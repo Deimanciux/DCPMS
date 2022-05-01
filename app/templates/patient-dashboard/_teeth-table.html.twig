@@ -1,0 +1,38 @@
+<div class="container ps-0">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-bordered" id="tooth-table">
+                <tbody>
+                    <tr>
+                        {% for position in positions %}
+                                {% if position.position < 30%}
+                                    <td data-position-number="{{ position.position }}">{{ position.position }}</td>
+                                {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for position in positions %}
+                            {% if position.position < 31%}
+                                <td data-position-image="{{ position.position }}"><i class="fa fa-tooth"></i></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for position in positions %}
+                            {% if position.position > 30%}
+                                <td data-position-image="{{ position.position }}"><i class="fa fa-tooth"></i></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for position in positions %}
+                            {% if position.position > 30%}
+                                <td data-position-number="{{ position.position }}">{{ position.position }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
