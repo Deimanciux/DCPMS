@@ -1,0 +1,67 @@
+{% if records|length == 0 %}
+    <div class="alert alert-secondary" role="alert">
+        No health history records was found
+    </div>
+{% else %}
+    <table class="table datagrid" id="health-record-table">
+        <thead>
+        <tr>
+            <th class=" header-for-field-text text-left" dir="ltr">
+                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
+                    Date <i class="fa fa-fw fa-sort"></i>
+                </a>
+            </th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">
+                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
+                    Code <i class="fa fa-fw fa-sort"></i>
+                </a>
+            </th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">
+                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
+                    Position <i class="fa fa-fw fa-sort"></i>
+                </a>
+            </th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">
+                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">
+                    Diagnosis <i class="fa fa-fw fa-sort"></i>
+                </a>
+            </th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">
+                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">
+                    Notes <i class="fa fa-fw fa-sort"></i>
+                </a>
+            </th>
+
+            <th width="10px" dir="ltr">
+                <span class="sr-only">Actions</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in records %}
+            <tr data-id="{{ record.id }}">
+                <td data-label="createdAt" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.createdAt|date('Y-m-d H:i:s')}}">{{ record.createdAt|date('Y-m-d H:i:s')}}</span>
+                </td>
+                <td data-label="code" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.diagnosis.code }}">{{ record.diagnosis.code }}</span>
+                </td>
+                <td data-label="position" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.position.position }}">{{ record.position.position }}</span>
+                </td>
+                </td>
+                <td data-label="diagnosis" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.diagnosis.title }}">{{ record.diagnosis.title }}</span>
+                </td>
+                <td data-label="notes" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.notes }}">{{ record.notes }}</span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

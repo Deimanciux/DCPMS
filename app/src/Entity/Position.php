@@ -11,16 +11,19 @@ class Position
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'integer')]
-    private $position;
+    private int $position;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
-    private $description;
+    private ?string $description;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $title;
+    private string $title;
+
+    #[ORM\Column(type: 'integer')]
+    private int $sequenceNumber;
 
     public function getId(): ?int
     {
@@ -59,6 +62,18 @@ class Position
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSequenceNumber(): ?int
+    {
+        return $this->sequenceNumber;
+    }
+
+    public function setSequenceNumber(int $sequenceNumber): self
+    {
+        $this->sequenceNumber = $sequenceNumber;
 
         return $this;
     }

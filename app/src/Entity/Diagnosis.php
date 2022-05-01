@@ -11,19 +11,19 @@ class Diagnosis
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $title;
+    private string $title;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
-    private $descriptiom;
+    private ?string $description;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $code;
+    private string $code;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $is_active;
+    private ?bool $is_active;
 
     public function getId(): ?int
     {
@@ -42,14 +42,14 @@ class Diagnosis
         return $this;
     }
 
-    public function getDescriptiom(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descriptiom;
+        return $this->description;
     }
 
-    public function setDescriptiom(?string $descriptiom): self
+    public function setDescription(?string $description): self
     {
-        $this->descriptiom = $descriptiom;
+        $this->description = $description;
 
         return $this;
     }

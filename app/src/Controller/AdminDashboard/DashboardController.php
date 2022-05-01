@@ -2,6 +2,7 @@
 
 namespace App\Controller\AdminDashboard;
 
+use App\Entity\Diagnosis;
 use App\Entity\HealthRecord;
 use App\Entity\Position;
 use App\Entity\Service;
@@ -49,7 +50,7 @@ class DashboardController extends AbstractDashboardController
             'fa fa-prescription-bottle',
             HealthRecord::class
         );
-        yield MenuItem::linkToCrud('Diagnosis', 'fa fa-book-medical', HealthRecord::class);
+        yield MenuItem::linkToCrud('Diagnosis', 'fa fa-book-medical', Diagnosis::class);
         yield MenuItem::linkToCrud('Positions', 'fas fa-compress-arrows-alt', Position::class);
         yield MenuItem::linkToCrud('Services', 'fas fa-stethoscope', Service::class)
             ->setController(ServiceCrudController::class);

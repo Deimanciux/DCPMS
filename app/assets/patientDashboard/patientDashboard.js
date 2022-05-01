@@ -237,3 +237,53 @@ async function init() {
 }
 
 init();
+
+//--------------------------------------------------
+let positions;
+let rows =  $("tr");
+let healthRecordTableContainer =  $('#health-record-table-container');
+
+async function initHealthRecordPage() {
+    await getPositions();
+    addEventsOnTooth();
+}
+
+async function getPositions() {
+    await $.ajax({
+        method: "GET",
+        url: "/positions",
+        dataType: 'json',
+        success: function (response) {
+            positions = response.data;
+        },
+        error: function (response) {
+        }
+    });
+}
+
+async function getHealthRecordTemplateByTooth(position) {
+    await $.ajax({
+        method: "GET",
+        url: "/health-records/" + position,
+        dataType: 'json',
+        success: function (response) {
+            healthRecordTableContainer.empty();
+            healthRecordTableContainer.append(response.data)
+        },
+        error: function (response) {
+        }
+    });
+}
+
+function addEventsOnTooth() {
+    for(let i=0; i<positions.length; i++) {
+        rows.find("[data-position-number='" + positions[i].position + "']").on('click', async function () {
+            await getHealthRecordTemplateByTooth(positions[i].position);
+        })
+        rows.find("[data-position-image='" + positions[i].position + "']").on('click', async function () {
+            await getHealthRecordTemplateByTooth(positions[i].position);
+        })
+    }
+}
+
+initHealthRecordPage();
