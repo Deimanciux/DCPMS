@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\HealthRecordRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: HealthRecordRepository::class)]
@@ -18,6 +19,10 @@ class HealthRecord
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'doctorHealthRecords')]
+    #[ORM\JoinColumn(nullable: false)]
+    private UserInterface $doctor;
+
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     private ?string $notes;
 
@@ -28,10 +33,10 @@ class HealthRecord
     private Position $position;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -118,5 +123,17 @@ class HealthRecord
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTimeImmutable('now'));
         }
+    }
+
+    public function getDoctor(): ?UserInterface
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(?UserInterface $user): self
+    {
+        $this->doctor = $user;
+
+        return $this;
     }
 }

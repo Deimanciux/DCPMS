@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Controller\PatientDashboard;
 
-use App\Controller\PatientDashboard\PatientDashboardController;
 use App\DTO\ReservationDTO;
 use App\Entity\Reservation;
 use App\Entity\Service;
