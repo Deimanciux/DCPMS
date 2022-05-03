@@ -1,105 +1,10 @@
-{% extends '@!EasyAdmin/page/content.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block content_title %}Health records{% endblock %}
 
 {% block main %}
     {{ include('patient-dashboard/_teeth-table.html.twig') }}
-
     <div id="health-record-table-container">
         {{ include('patient-dashboard/_health-record-table.html.twig') }}
     </div>
-
-{#    <table class="table datagrid">#}
-{#        <thead>#}
-{#        <tr>#}
-{#            <th>#}
-{#                <div class="form-check">#}
-{#                    <span><input type="checkbox" class="form-check-input form-batch-checkbox-all"></span>#}
-{#                </div>#}
-{#            </th>#}
-
-{#            <th class=" header-for-field-text text-left" dir="ltr">#}
-{#                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">#}
-{#                    Date <i class="fa fa-fw fa-sort"></i>#}
-{#                </a>#}
-{#            </th>#}
-
-{#            <th class=" header-for-field-text text-left" dir="ltr">#}
-{#                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">#}
-{#                    Code <i class="fa fa-fw fa-sort"></i>#}
-{#                </a>#}
-{#            </th>#}
-
-{#            <th class=" header-for-field-text text-left" dir="ltr">#}
-{#                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">#}
-{#                    Position <i class="fa fa-fw fa-sort"></i>#}
-{#                </a>#}
-{#            </th>#}
-
-{#            <th class=" header-for-field-text text-left" dir="ltr">#}
-{#                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">#}
-{#                    Diagnosis <i class="fa fa-fw fa-sort"></i>#}
-{#                </a>#}
-{#            </th>#}
-
-{#            <th class=" header-for-field-text text-left" dir="ltr">#}
-{#                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">#}
-{#                    Notes <i class="fa fa-fw fa-sort"></i>#}
-{#                </a>#}
-{#            </th>#}
-
-{#            <th width="10px" dir="ltr">#}
-{#                <span class="sr-only">Actions</span>#}
-{#            </th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody>#}
-
-{#            <td class="batch-actions-selector">#}
-{#                <div class="form-check">#}
-{#                    <input type="checkbox" class="form-check-input form-batch-checkbox" value="1">#}
-{#                </div>#}
-{#            </td>#}
-{#            {% for record in records %}#}
-{#                <tr data-id="{{ record.id }}">#}
-{#                    <td data-label="createdAt" class=" text-left field-text" dir="ltr">#}
-{#                        <span title="{{ record.createdAt|date('Y-m-d H:i:s')}}">{{ record.createdAt|date('Y-m-d H:i:s')}}</span>#}
-{#                    </td>#}
-{#                    <td data-label="code" class=" text-left field-text" dir="ltr">#}
-{#                        <span title="{{ record.diagnosis.code }}">{{ record.diagnosis.code }}</span>#}
-{#                    </td>#}
-{#                    <td data-label="position" class=" text-left field-text" dir="ltr">#}
-{#                        <span title="{{ record.position.position }}">{{ record.position.position }}</span>#}
-{#                    </td>#}
-{#                    </td>#}
-{#                    <td data-label="diagnosis" class=" text-left field-text" dir="ltr">#}
-{#                        <span title="{{ record.diagnosis.title }}">{{ record.diagnosis.title }}</span>#}
-{#                    </td>#}
-{#                    <td data-label="notes" class=" text-left field-text" dir="ltr">#}
-{#                        <span title="{{ record.notes }}">{{ record.notes }}</span>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-{#            <td class="actions actions-as-dropdown">#}
-{#                <div class="dropdown dropdown-actions">#}
-{#                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#                        <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" fill="none" viewBox="0 0 24 24" stroke="currentColor">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />#}
-{#                        </svg>#}
-{#                    </a>#}
-
-{#                    <div class="dropdown-menu dropdown-menu-right">#}
-{#                        <a class="dropdown-item action-edit"#}
-{#                           href="http://localhost:8080/?crudAction=edit&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;entityId=1&amp;menuIndex=1&amp;referrer=http%3A%2F%2Flocalhost%3A8080%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=MI7zWbK_JizpUmAyFY0k21UG6CWItCOsBmN2qXq4F_U&amp;submenuIndex=-1"#}
-{#                           data-action-name="edit" ><span class="action-label">Edit</span></a>#}
-
-{#                        <a class="dropdown-item action-delete text-danger"#}
-{#                           href="http://localhost:8080/?crudAction=delete&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;entityId=1&amp;menuIndex=1&amp;referrer=http%3A%2F%2Flocalhost%3A8080%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=xCsca2mmD-J2oWmA3QjC7ZQrr5Vbpz-KZV7EaZDhV6g&amp;submenuIndex=-1"#}
-{#                           data-action-name="delete" formaction="http&#x3A;&#x2F;&#x2F;localhost&#x3A;8080&#x2F;&#x3F;crudAction&#x3D;delete&amp;crudControllerFqcn&#x3D;App&#x25;5CController&#x25;5CPatientDashboard&#x25;5CHealthRecordCrudController&amp;entityId&#x3D;1&amp;menuIndex&#x3D;1&amp;signature&#x3D;xCsca2mmD-J2oWmA3QjC7ZQrr5Vbpz-KZV7EaZDhV6g&amp;submenuIndex&#x3D;-1" data-bs-toggle="modal" data-bs-target="&#x23;modal-delete" ><span class="action-label">Delete</span></a>#}
-
-{#                    </div>#}
-{#                </div>#}
-{#            </td>#}
-{#        </tbody>#}
-{#    </table>#}
 {% endblock %}

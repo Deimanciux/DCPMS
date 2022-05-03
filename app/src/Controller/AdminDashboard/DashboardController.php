@@ -11,10 +11,12 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -36,16 +38,15 @@ class DashboardController extends AbstractDashboardController
         return parent::configureAssets()->addWebpackEncoreEntry('adminDashboard');
     }
 
-    //TODO configure avatar picture
-//    public function configureUserMenu(UserInterface $user): UserMenu
-//    {
-//        if (!$user instanceof User) {
-//            throw new \Exception('Wrong useer');
-//        }
-//
-//        return parent::configureUserMenu($user)
-//            ->setAvatarUrl($user->getAvatarUrl());
-//    }
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        if (!$user instanceof User) {
+            throw new \Exception('Wrong user');
+        }
+
+        return parent::configureUserMenu($user)
+            ->setAvatarUrl($user->getAvatarUrl());
+    }
 
     public function configureMenuItems(): iterable
     {

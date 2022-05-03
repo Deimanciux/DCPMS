@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
@@ -24,11 +24,11 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: 'register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         if ($this->isGranted(User::ROLE_PATIENT)) {
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('patient_dashboard');
         }
 
         $user = new User();
@@ -55,10 +55,10 @@ class RegistrationController extends AbstractController
 //                                ->htmlTemplate('registration/confirmation_email.html.twig')
 //                        );
 
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('patient_dashboard');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('security/register.html.twig', [
             'form' => $form->createView(),
         ]);
     }
