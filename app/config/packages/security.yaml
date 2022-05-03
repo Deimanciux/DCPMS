@@ -1,4 +1,9 @@
 security:
+    role_hierarchy:
+        ROLE_PATIENT: [ ROLE_PATIENT ]
+        ROLE_CLINIC_WORKER: [ ROLE_PATIENT, ROLE_CLINIC_WORKER ]
+        ROLE_DOCTOR: [ ROLE_PATIENT, ROLE_CLINIC_WORKER, ROLE_DOCTOR ]
+        ROLE_ADMIN: [ ROLE_PATIENT, ROLE_CLINIC_WORKER, ROLE_DOCTOR, ROLE_ADMIN ]
     enable_authenticator_manager: true
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -17,13 +22,13 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: app_login
-                check_path: app_login
+                login_path: login
+                check_path: login
                 username_parameter: "login_form[email]"
                 password_parameter: "login_form[password]"
             logout:
-                path: app_logout
-                target: app_login
+                path: logout
+                target: login
 
     access_control:
        - { path: ^/index, roles: ROLE_PATIENT }

@@ -1,4 +1,4 @@
-{% extends '@!EasyAdmin/page/content.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block content_title %}
     <div class = "container p-0">
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block main %}
-    {{ include('patient-dashboard/reservation_form.html.twig') }}
+    {{ include('patient-dashboard/_reservation_form.html.twig') }}
     <div class="row">
         <div id="calendar"></div>
     </div>

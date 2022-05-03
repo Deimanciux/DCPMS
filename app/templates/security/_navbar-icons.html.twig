@@ -1,0 +1,6 @@
+ {% if is_granted('ROLE_PATIENT') %}
+    {{ user_menu_avatar }}
+{% else %}
+    <a class="m-3" style="color: #7a7571;" href="{{ path('login') }}">Login</a>
+    <a style="color: #7a7571;" href="{{ path('register') }}">Register</a>
+{% endif %}

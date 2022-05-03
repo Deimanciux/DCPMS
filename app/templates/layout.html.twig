@@ -1,0 +1,50 @@
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+  {% block responsive_header %}
+      {% if is_granted('ROLE_PATIENT') %}
+          <button id="navigation-toggler" type="button" aria-label="Toggle navigation">
+              <i class="fa fa-fw fa-bars"></i>
+          </button>
+      {% endif %}
+
+      <div id="responsive-header-logo" class="text-truncate">
+          {% block responsive_header_logo %}
+              <a class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                  {{ ea.dashboardTitle|raw }}
+              </a>
+          {% endblock responsive_header_logo %}
+      </div>
+
+      <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
+          <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+              {{ include('security/_navbar-icons.html.twig') }}
+          </a>
+
+          {{ user_menu_dropdown }}
+      </div>
+  {% endblock responsive_header %}
+
+{% block header_custom_menu %}
+    <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
+        <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+            {{ include('security/_navbar-icons.html.twig') }}
+            {% if ea.userMenu.isNameDisplayed %}
+                <span class="user-name">{{ ea.userMenu.name }}</span>
+            {% endif %}
+        </a>
+
+        {{ user_menu_dropdown }}
+    </div>
+{% endblock header_custom_menu %}
+
+{% block header_navbar %}
+    <div id="header-logo">
+        {% block header_logo %}
+            <a class="logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
+                <span class="logo-compact"><i class="fas fa-home"></i></span>
+            </a>
+        {% endblock header_logo %}
+    </div>
+{% endblock header_navbar %}
+

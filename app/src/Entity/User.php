@@ -18,8 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_PATIENT = 'ROLE_PATIENT';
-    public const ROLE_CLINIC_WORKER = 'ROLE_USER';
-    public const ROLE_DOCTOR = 'ROLE_USER';
+    public const ROLE_CLINIC_WORKER = 'ROLE_CLINIC_WORKER';
+    public const ROLE_DOCTOR = 'ROLE_DOCTOR';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     #[ORM\Id]
@@ -51,7 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 50)]
     private string $email;
 
-    #[Assert\NotBlank]
     #[ORM\Column(type: "string", length: 50, nullable: true)]
     private ?string $avatar;
 

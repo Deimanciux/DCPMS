@@ -32,7 +32,7 @@ class ServiceCrudController extends AbstractCrudController
                 ->setFormTypeOption('by_reference', false)
                 ->onlyOnForms(),
             CollectionField::new('serviceImages')
-                ->setTemplatePath('admin/service_images.html.twig')
+                ->setTemplatePath('admin/_service_images.html.twig')
                 ->onlyOnDetail()
         ];
     }

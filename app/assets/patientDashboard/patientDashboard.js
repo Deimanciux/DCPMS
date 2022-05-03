@@ -17,6 +17,7 @@ let empty_value_message = ' can not be empty';
 let calendar_container = $('#calendar');
 let reservation_doctor = $('#reservation_doctor');
 let reservation_doctor_option = $('#reservation_doctor option');
+let new_reservation = $('#new-reservation');
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -165,8 +166,14 @@ function clearValues() {
     reservation_doctor.parent().hide();
 }
 
-$('#new-reservation').on('click', function () {
+new_reservation.on('click', async function (event) {
     clearValues();
+
+    if (event.target.hasAttribute('data-service-id')) {
+        reservation_service.val($(event.target).attr("data-service-id"));
+        await getDoctorsByService(reservation_service.val())
+        reservation_doctor.parent().show();
+    }
 })
 
 $('#reservation_save').on('click', function (event) {
@@ -222,7 +229,6 @@ function checkIfFieldsShouldBeHidden() {
         reservation_doctor.parent().show();
     }
 }
-
 
 async function init() {
     await getReservationsByUser();

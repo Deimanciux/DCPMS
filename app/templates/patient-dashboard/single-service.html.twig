@@ -1,9 +1,9 @@
-{% extends '@!EasyAdmin/page/content.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block content_title %}{{ service.title }}{% endblock %}
 
 {% block main %}
-    {{ include('patient-dashboard/reservation_form.html.twig') }}
+    {{ include('patient-dashboard/_reservation_form.html.twig') }}
     <div class="row">
         <div id="carouselExampleControls" class="carousel slide col-md-5" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -24,12 +24,13 @@
         </div>
         <div class="col-6 text-right">
             <p style="text-align: justify;">{{ service.description }}</p>
-            <button type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Register For Appointment</button>
+
+            {% if is_granted('ROLE_PATIENT')%}
+                <button data-service-id="{{ service.id }}" type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Make a reservation</button>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path('login') }}" role="button">Login and make reservation</a>
+            {% endif %}
         </div>
-{#        <div class="col-md-6 p-1">#}
-{#            <p style="text-align: justify;">{{ service.description }}</p>#}
-{#            <button type="button" class="btn btn-primary">Register For Appointment</button>#}
-{#        </div>#}
     </div>
 
     <div class="row mt-4 pt-4 content-header-title">

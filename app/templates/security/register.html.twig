@@ -1,0 +1,34 @@
+{% extends ea is defined ? ea.templatePath('layout') : '@EasyAdmin/page/login_minimal.html.twig' %}
+{% trans_default_domain ea is defined ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
+
+{% block body_class 'page-login' %}
+{% block page_title %}{{ page_title is defined ? page_title|raw : (ea is defined ? ea.dashboardTitle|raw : '') }}{% endblock %}
+
+{% block wrapper_wrapper %}
+    {% set page_title = block('page_title') %}
+    {% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans({}, 'EasyAdminBundle') %}
+    {% set _password_label = password_label is defined ? password_label|trans : 'login_page.password'|trans({}, 'EasyAdminBundle') %}
+    {% set _forgot_password_label = forgot_password_label is defined ? forgot_password_label|trans : 'login_page.forgot_password'|trans({}, 'EasyAdminBundle') %}
+    {% set _remember_me_label = remember_me_label is defined ? remember_me_label|trans : 'login_page.remember_me'|trans({}, 'EasyAdminBundle') %}
+    {% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans({}, 'EasyAdminBundle') %}
+
+    {% include '@EasyAdmin/flash_messages.html.twig' %}
+
+    <div class="login-wrapper">
+        <section class="content">
+            {% if error|default(false) %}
+                <div class="w-100 alert alert-danger rounded mb-3">
+                    <i class="fas fa-times-circle mr-1"></i>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+            <form method="post" action="{{ action|default('') }}">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </form>
+            <p>Have an account? <a href="{{ path('login')}}">Login</a></p>
+            <script src="{{ asset('bundles/easyadmin/login.js') }}"></script>
+        </section>
+    </div>
+{% endblock %}
