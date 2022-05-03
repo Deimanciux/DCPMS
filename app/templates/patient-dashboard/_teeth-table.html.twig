@@ -6,28 +6,32 @@
                     <tr>
                         {% for position in positions %}
                                 {% if position.position < 30%}
-                                    <td data-position-number="{{ position.position }}">{{ position.position }}</td>
+                                    <td class = "tooth-data" data-position-number="{{ position.position }}">{{ position.position }}</td>
                                 {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         {% for position in positions %}
                             {% if position.position < 31%}
-                                <td data-position-image="{{ position.position }}"><i class="fa fa-tooth"></i></td>
+                                <td class = "tooth-data" data-position-number="{{ position.position }}">
+                                    <img style="max-width: 100%; max-height: 30px;" class="img-responsive" src="/images/teeth/regular/{{position.position}}.png" alt="">
+                                </td>
                             {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         {% for position in positions %}
                             {% if position.position > 30%}
-                                <td data-position-image="{{ position.position }}"><i class="fa fa-tooth"></i></td>
+                                <td class = "tooth-data" data-position-number="{{ position.position }}">
+                                    <img style="max-width: 100%; max-height: 30px;" class="img-responsive" src="/images/teeth/regular/{{position.position}}.png" alt="">
+                                </td>
                             {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         {% for position in positions %}
                             {% if position.position > 30%}
-                                <td data-position-number="{{ position.position }}">{{ position.position }}</td>
+                                <td class = "tooth-data" data-position-number="{{ position.position }}">{{ position.position }}</td>
                             {% endif %}
                         {% endfor %}
                     </tr>

@@ -1,0 +1,25 @@
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    <div class = "container p-0">
+        <div id="calendar_alert" style="font-size: 14px; display: none" class="alert alert-danger" role="alert"></div>
+        <div class="row p-0">
+            <div class="col-6 text-left content-header-title">
+                <h1 class="title">Health records</h1>
+            </div>
+            <div class="col-6 text-right">
+                <button type="button" id="new-health-record" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    {{ include('patient-dashboard/_teeth-table.html.twig') }}
+
+    <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
+        {{ include('admin/_health-record-table.html.twig') }}
+    </div>
+
+    {{ include('admin/_health_record_edit_modal.html.twig') }}
+{% endblock %}

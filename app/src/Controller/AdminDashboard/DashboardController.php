@@ -8,6 +8,7 @@ use App\Entity\Position;
 use App\Entity\Service;
 use App\Entity\Tooth;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -28,6 +29,11 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Dental Clinic AdminDashboard');
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()->addWebpackEncoreEntry('adminDashboard');
     }
 
     //TODO configure avatar picture
@@ -57,5 +63,12 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Teeth', 'fas fa-tooth', Tooth::class);
         yield MenuItem::linkToCrud('Work Schedule', 'fas fa-calendar-alt', Tooth::class);
         yield MenuItem::linkToCrud('Registrations', 'fas fa-clipboard-list', Tooth::class);
+        yield MenuItem::linkToRoute(
+            'Health records creation',
+            'fa fa-file-medical',
+            'app_health_records_admin'
+        )->setPermission(User::ROLE_PATIENT);
+        yield MenuItem::linkToCrud('Patients', 'fas fa-clipboard-list', User::class)
+              ->setController(PatientCrudController::class);
     }
 }

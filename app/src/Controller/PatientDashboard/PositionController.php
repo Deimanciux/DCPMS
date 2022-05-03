@@ -33,6 +33,7 @@ class PositionController extends AbstractController
         foreach ($positions as $position) {
             $data[] = [
                 'position' => $position->getPosition(),
+                'id' => $position->getId(),
             ];
         }
 

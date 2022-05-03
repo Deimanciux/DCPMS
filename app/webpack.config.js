@@ -14,9 +14,9 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
-    .copyFiles({
-        from: './assets/images',
-    })
+    // .copyFiles({
+    //     from: './assets/images',
+    // })
     .enableVersioning()
     /*
      * ENTRY CONFIG
@@ -27,6 +27,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addStyleEntry('appStyle', './assets/styles/app.scss')
     .addEntry('patientDashboard', './assets/patientDashboard/patientDashboard.js')
+    .addEntry('adminDashboard', './assets/adminDashboard/adminDashboard.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

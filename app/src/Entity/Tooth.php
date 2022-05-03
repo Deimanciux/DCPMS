@@ -16,10 +16,13 @@ class Tooth
     private int $id;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private bool $is_removed;
+    private bool $isRemoved;
 
     #[ORM\OneToMany(mappedBy: 'tooth', targetEntity: HealthRecord::class)]
     private Collection $healthRecords;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private bool $isHealed;
 
     public function __construct()
     {
@@ -33,12 +36,12 @@ class Tooth
 
     public function getIsRemoved(): ?bool
     {
-        return $this->is_removed;
+        return $this->isRemoved;
     }
 
-    public function setIsRemoved(?bool $is_removed): self
+    public function setIsRemoved(?bool $isRemoved): self
     {
-        $this->is_removed = $is_removed;
+        $this->isRemoved = $isRemoved;
 
         return $this;
     }
@@ -69,6 +72,18 @@ class Tooth
                 $healthRecord->setTooth(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsHealed(): ?bool
+    {
+        return $this->isHealed;
+    }
+
+    public function setIsHealed(?bool $isHealed): self
+    {
+        $this->isHealed = $isHealed;
 
         return $this;
     }

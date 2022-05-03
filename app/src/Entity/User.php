@@ -84,7 +84,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $patientReservations;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: HealthRecord::class, orphanRemoval: true)]
-    private $healthRecords;
+    private Collection $healthRecords;
+
+    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: HealthRecord::class, orphanRemoval: true)]
+    private Collection $doctorHealthRecords;
 
     public function __construct()
     {
@@ -93,6 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservations = new ArrayCollection();
         $this->patientReservations = new ArrayCollection();
         $this->healthRecords = new ArrayCollection();
+        $this->doctorHealthRecords = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,7 +162,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        $this->roles[] = 'ROLE_PATIENT';
+        if (!in_array(self::ROLE_PATIENT, $this->roles, false)) {
+            $this->roles[] = self::ROLE_PATIENT;
+        }
 
         return array_unique($this->roles);
     }
@@ -402,6 +408,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeHealthRecord(HealthRecord $healthRecord): self
     {
         if ($this->healthRecords->removeElement($healthRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($healthRecord->getUser() === $this) {
+                $healthRecord->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HealthRecord>
+     */
+    public function getDoctorHealthRecords(): Collection
+    {
+        return $this->doctorHealthRecords;
+    }
+
+    public function addDoctorHealthRecord(HealthRecord $healthRecord): self
+    {
+        if (!$this->doctorHealthRecords->contains($healthRecord)) {
+            $this->doctorHealthRecords[] = $healthRecord;
+            $healthRecord->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDoctorHealthRecord(HealthRecord $healthRecord): self
+    {
+        if ($this->doctorHealthRecords->removeElement($healthRecord)) {
             // set the owning side to null (unless already changed)
             if ($healthRecord->getUser() === $this) {
                 $healthRecord->setUser(null);

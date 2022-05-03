@@ -1,0 +1,22 @@
+<div class="modal fade" id="healthRecordModal" tabindex="-1" aria-labelledby="healthRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div style="display: none" id="healthRecordAlert" class="alert alert-danger" role="alert"></div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="healthRecordModalLabel">Create new health record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form) }}
+                {{ form_row(form.position) }}
+                {{ form_row(form.diagnosis) }}
+                {{ form_row(form.notes) }}
+                {{ form_row(form.user) }}
+            </div>
+            <div class="modal-footer">
+                {{ form_widget(form.save) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
