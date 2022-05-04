@@ -40,22 +40,26 @@ class HealthRecordVoter extends Voter
 
         return match ($attribute) {
             self::VIEW => $this->canView($healthRecord, $user),
-            self::EDIT => $this->canEdit($healthRecord, $user),
-            default => throw new \LogicException('This code should not be reached!'),
+            self::EDIT => $this->canEdit($user),
+            default => throw new \LogicException('Access denied'),
         };
     }
 
     private function canView(HealthRecord $healthRecord, User $user): bool
     {
-        if ($this->canEdit($healthRecord, $user)) {
+        return $user === $healthRecord->getUser() && in_array(User::ROLE_PATIENT, $user->getRoles(), true);
+    }
+
+    private function canEdit(User $user): bool
+    {
+        if (in_array(User::ROLE_DOCTOR, $user->getRoles(), true)) {
+            return true;
+        }
+
+        if (in_array(User::ROLE_ADMIN, $user->getRoles(), true)) {
             return true;
         }
 
         return false;
-    }
-
-    private function canEdit(HealthRecord $healthRecord, User $user): bool
-    {
-        return $user === $healthRecord->getUser();
     }
 }

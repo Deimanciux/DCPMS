@@ -18,6 +18,7 @@ let calendar_container = $('#calendar');
 let reservation_doctor = $('#reservation_doctor');
 let reservation_doctor_option = $('#reservation_doctor option');
 let new_reservation = $('#new-reservation');
+let show_all_records = $('#show-all-records');
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -39,15 +40,6 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,listWeek'
     },
-    // events: [
-    //     {
-    //         id: '1',
-    //         title: 'The Title',
-    //         start: '2022-04-13 10:20',
-    //         end: '2022-04-14 10:20',
-    //         service: 3
-    //     }
-    // ],
     businessHours: [
         {
             daysOfWeek: [ 1, 2, 3 ],
@@ -248,10 +240,13 @@ init();
 let positions;
 let rows =  $("tr");
 let healthRecordTableContainer =  $('#health-record-table-container');
+let patient;
+let toothData = $('.tooth-data');
 
 async function initHealthRecordPage() {
     await getPositions();
     addEventsOnTooth();
+    patient = healthRecordTableContainer.attr('data-patient-id');
 }
 
 async function getPositions() {
@@ -281,15 +276,64 @@ async function getHealthRecordTemplateByTooth(position) {
     });
 }
 
+show_all_records.on('click', async function () {
+   await getHealthRecordTemplateByPatient(patient)
+})
+
+async function getHealthRecordTemplateByPatient(patient) {
+    await $.ajax({
+        method: "GET",
+        url: "/health-records/patient/" + patient,
+        dataType: 'json',
+        success: function (response) {
+            healthRecordTableContainer.empty();
+            healthRecordTableContainer.append(response.data);
+        },
+        error: function (response) {
+        }
+    });
+}
+
+async function getHealthRecordTemplateByPositionAndUser(patient, position) {
+    await $.ajax({
+        method: "GET",
+        url: "/health-records/patient/" + patient + "/position/" + position,
+        dataType: 'json',
+        success: function (response) {
+            healthRecordTableContainer.empty();
+            healthRecordTableContainer.append(response.data)
+        },
+        error: function (response) {
+        }
+    });
+}
+
+function removeStyleFromToothData () {
+    for (let i=0; i<toothData.length; i++) {
+        $(toothData[i]).css('backgroundColor', "");
+    }
+}
+
 function addEventsOnTooth() {
     for(let i=0; i<positions.length; i++) {
-        rows.find("[data-position-number='" + positions[i].position + "']").on('click', async function () {
-            await getHealthRecordTemplateByTooth(positions[i].position);
+        rows.find("[data-position-number='" + positions[i].position + "']").on('click', async function (event) {
+            if (event.target.tagName === "IMG") {
+                removeStyleFromToothData()
+                $(this).closest("[data-position-number]").css('backgroundColor', "#f7f7f9");
+            } else {
+                removeStyleFromToothData()
+                $(event.target).css('backgroundColor', "#f7f7f9");
+            }
+            makeActionsAfterToothClick(positions[i])
         })
         rows.find("[data-position-image='" + positions[i].position + "']").on('click', async function () {
-            await getHealthRecordTemplateByTooth(positions[i].position);
+            makeActionsAfterToothClick(positions[i])
         })
     }
+}
+
+async function makeActionsAfterToothClick(position)  {
+    await getHealthRecordTemplateByPositionAndUser(patient, position.position);
 }
 
 initHealthRecordPage();
