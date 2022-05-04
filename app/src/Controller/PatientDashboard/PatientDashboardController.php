@@ -79,17 +79,6 @@ class PatientDashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToCrud(
-            'Services',
-           "fa fa-suitcase",
-            Service::class
-        )->setPermission(User::ROLE_PATIENT)
-         ->setController(ServiceCrudController::class);
-        yield MenuItem::linkToCrud(
-            'Health Records admin',
-            'fa fa-prescription-bottle',
-            HealthRecord::class
-        )->setPermission(User::ROLE_PATIENT);
         yield MenuItem::linkToRoute(
             'Reservations',
             'fa fa-calendar-check',

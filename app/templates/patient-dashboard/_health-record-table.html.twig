@@ -6,39 +6,17 @@
     <table class="table datagrid" id="health-record-table">
         <thead>
         <tr>
-            <th class=" header-for-field-text text-left" dir="ltr">
-                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
-                    Date <i class="fa fa-fw fa-sort"></i>
-                </a>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Date</th>
 
-            <th class=" header-for-field-text text-left" dir="ltr">
-                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
-                    Code <i class="fa fa-fw fa-sort"></i>
-                </a>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Code</th>
 
-            <th class=" header-for-field-text text-left" dir="ltr">
-                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Btitle%5D=DESC&amp;submenuIndex=-1">
-                    Position <i class="fa fa-fw fa-sort"></i>
-                </a>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Position</th>
 
-            <th class=" header-for-field-text text-left" dir="ltr">
-                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">
-                    Diagnosis <i class="fa fa-fw fa-sort"></i>
-                </a>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Diagnosis</th>
 
-            <th class=" header-for-field-text text-left" dir="ltr">
-                <a href="http://localhost:8080/?crudAction=index&amp;crudControllerFqcn=App%5CController%5CPatientDashboard%5CHealthRecordCrudController&amp;menuIndex=1&amp;page=1&amp;referrer=%2F%3FcrudAction%3Dindex%26crudControllerFqcn%3DApp%255CController%255CPatientDashboard%255CHealthRecordCrudController%26menuIndex%3D1%26signature%3DuhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc%26submenuIndex%3D-1&amp;signature=uhrNFKqaRwrtombDNL1AOIZXaWN5BygysDQ6TEMmCgc&amp;sort%5Bdescription%5D=DESC&amp;submenuIndex=-1">
-                    Notes <i class="fa fa-fw fa-sort"></i>
-                </a>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Doctor</th>
 
-            <th width="10px" dir="ltr">
-                <span class="sr-only">Actions</span>
-            </th>
+            <th class=" header-for-field-text text-left" dir="ltr">Notes</th>
         </tr>
         </thead>
         <tbody>
@@ -56,6 +34,9 @@
                 </td>
                 <td data-label="diagnosis" class=" text-left field-text" dir="ltr">
                     <span title="{{ record.diagnosis.title }}">{{ record.diagnosis.title }}</span>
+                </td>
+                <td data-label="doctor" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.doctor.name ~ ' ' ~ record.doctor.surname }}">{{ record.doctor.name ~ ' ' ~ record.doctor.surname }}</span>
                 </td>
                 <td data-label="notes" class=" text-left field-text" dir="ltr">
                     <span title="{{ record.notes }}">{{ record.notes }}</span>

@@ -1,10 +1,22 @@
 {% extends 'layout.html.twig' %}
 
-{% block content_title %}Health records{% endblock %}
+{% block content_title %}
+<div class = "container p-0">
+    <div id="calendar_alert" style="font-size: 14px; display: none" class="alert alert-danger" role="alert"></div>
+    <div class="row p-0">
+        <div class="col-6 text-left content-header-title">
+            <h1 class="title">Health records</h1>
+        </div>
+        <div class="col-6 text-right">
+            <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block main %}
     {{ include('patient-dashboard/_teeth-table.html.twig') }}
-    <div id="health-record-table-container">
+    <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
         {{ include('patient-dashboard/_health-record-table.html.twig') }}
     </div>
 {% endblock %}
