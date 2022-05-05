@@ -1,7 +1,7 @@
 {% extends '@!EasyAdmin/page/content.html.twig' %}
 
   {% block responsive_header %}
-      {% if is_granted('ROLE_PATIENT') %}
+      {% if is_granted('IS_AUTHENTICATED_FULLY') %}
           <button id="navigation-toggler" type="button" aria-label="Toggle navigation">
               <i class="fa fa-fw fa-bars"></i>
           </button>

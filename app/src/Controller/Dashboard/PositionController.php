@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\PatientDashboard;
+namespace App\Controller\Dashboard;
 
 use App\Repository\PositionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

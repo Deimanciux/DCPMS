@@ -161,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        if (!in_array(self::ROLE_PATIENT, $this->roles, false)) {
+        if ($this->roles === []) {
             $this->roles[] = self::ROLE_PATIENT;
         }
 

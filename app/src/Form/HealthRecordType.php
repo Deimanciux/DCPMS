@@ -37,6 +37,7 @@ class HealthRecordType extends AbstractType
             ->add('user', HiddenType::class, [
                 'mapped' => false
             ])
+            ->add('id', HiddenType::class)
             ->add('save', SubmitType::class);
     }
 

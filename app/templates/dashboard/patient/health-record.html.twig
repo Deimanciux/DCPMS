@@ -15,8 +15,8 @@
 {% endblock %}
 
 {% block main %}
-    {{ include('patient-dashboard/_teeth-table.html.twig') }}
+    {{ include('dashboard/_teeth-table.html.twig') }}
     <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
-        {{ include('patient-dashboard/_health-record-table.html.twig') }}
+        {{ include('dashboard/patient/_health-record-table.html.twig') }}
     </div>
 {% endblock %}

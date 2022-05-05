@@ -49,7 +49,7 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
     // ],
     businessHours: [
         {
-            daysOfWeek: [ 1, 2, 3 ],
+            daysOfWeek: [ 1, 2, 3, 4, 5, 6, 7 ],
             startTime: '08:00',
             endTime: '18:00'
         },
@@ -283,7 +283,6 @@ async function getHealthRecordTemplateByPositionAndUser(position, patient) {
 }
 
 async function getHealthRecordTemplateByUser(patient) {
-    console.log("/health-records/update/user/" + patient);
     await $.ajax({
         method: "GET",
         url: "/health-records/update/" + patient,

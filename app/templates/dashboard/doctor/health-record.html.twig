@@ -8,6 +8,7 @@
                 <h1 class="title">Health records</h1>
             </div>
             <div class="col-6 text-right">
+                <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
                 <button type="button" id="new-health-record" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
             </div>
         </div>
@@ -15,11 +16,11 @@
 {% endblock %}
 
 {% block main %}
-    {{ include('patient-dashboard/_teeth-table.html.twig') }}
+    {{ include('dashboard/_teeth-table.html.twig') }}
 
     <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
-        {{ include('admin/_health-record-table.html.twig') }}
+        {{ include('dashboard/doctor/_health-record-table.html.twig') }}
     </div>
 
-    {{ include('admin/_health_record_edit_modal.html.twig') }}
+    {{ include('dashboard/doctor/_health_record_edit_modal.html.twig') }}
 {% endblock %}
