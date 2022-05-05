@@ -13,7 +13,7 @@ class HealthRecord
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'healthRecords')]
     #[ORM\JoinColumn(nullable: false)]
@@ -41,6 +41,11 @@ class HealthRecord
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getUser(): ?User

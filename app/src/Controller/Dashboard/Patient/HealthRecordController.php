@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\PatientDashboard;
+namespace App\Controller\Dashboard\Patient;
 
 use App\Entity\User;
 use App\Repository\HealthRecordRepository;
@@ -11,6 +11,7 @@ use App\Voter\HealthRecordVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class HealthRecordController extends AbstractController
 {
@@ -23,17 +24,17 @@ class HealthRecordController extends AbstractController
     #[Route('/health-records/patient', name: 'app_health_records')]
     public function index(): Response
     {
+        if ($this->isGranted(HealthRecordVoter::VIEW)) {
+            return $this->json(['error' => true], Response::HTTP_FORBIDDEN);
+        }
+
         /**@var User */
         $user = $this->getUser();
-
-        if (!$user) {
-            return $this->redirect('login');
-        }
 
         $healthRecords = $this->healthRecordRepository->findBy(['user' => $user]);
         $positions = $this->positionRepository->findBySequenceNumber();
 
-        return $this->render('patient-dashboard/health-record.html.twig', [
+        return $this->render('dashboard/patient/health-record.html.twig', [
             'records' => $healthRecords,
             'positions' => $positions,
             'patient' => $user->getId()
@@ -47,6 +48,8 @@ class HealthRecordController extends AbstractController
             return $this->json(['error' => true], Response::HTTP_FORBIDDEN);
         }
 
+        $user = $this->getUser();
+
         $position = $this->positionRepository->findOneBy([
             'position' => $positionNumber
         ]);
@@ -54,14 +57,14 @@ class HealthRecordController extends AbstractController
         $healthRecords = $this->healthRecordRepository->findBy([
             'position' => $position,
             'user' => $patient
-        ]);
+        ],
+            ['updatedAt' => 'desc']
+        );
 
-        $template = $this->renderView('patient-dashboard/_health-record-table.html.twig', [
-            'records' => $healthRecords,
-        ]);
-
-        return $this->json (
-            ['data' => $template]
+        return $this->json ([
+            'data' => $this->renderTemplateByRole($user, $healthRecords),
+            'roles' => $user->getRoles()
+            ]
         );
     }
 
@@ -72,13 +75,32 @@ class HealthRecordController extends AbstractController
             return $this->json(['error' => true], Response::HTTP_FORBIDDEN);
         }
 
-        $healthRecords = $this->healthRecordRepository->findBy(['user' => $patient]);
-        $template = $this->renderView('patient-dashboard/_health-record-table.html.twig', [
-            'records' => $healthRecords
-        ]);
+        $user = $this->getUser();
+
+        if ($this->getUser() === null) {
+            $this->redirect('login');
+        }
+
+        $healthRecords = $this->healthRecordRepository->findBy(['user' => $patient], ['updatedAt' => 'desc']);
 
         return $this->json (
-            ['data' => $template]
+            ['data' => $this->renderTemplateByRole($user, $healthRecords)]
         );
+    }
+
+    private function renderTemplateByRole(UserInterface $user, array $healthRecords): string
+    {
+        if (
+            in_array(User::ROLE_DOCTOR, $user->getRoles(), true)
+            || in_array(User::ROLE_ADMIN, $user->getRoles(), true)
+        ) {
+            return $this->renderView('dashboard/doctor/_health-record-table.html.twig', [
+                'records' => $healthRecords,
+            ]);
+        }
+
+        return $this->renderView('dashboard/patient/_health-record-table.html.twig', [
+            'records' => $healthRecords
+        ]);
     }
 }

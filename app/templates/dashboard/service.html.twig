@@ -7,7 +7,7 @@
         <div class="row">
             {% for service in services %}
                 {% set url = ea_url()
-                    .setDashboard('App\\Controller\\PatientDashboard\\PatientDashboardController')
+                    .setDashboard('App\\Controller\\Dashboard\\PatientDashboardController')
                     .setEntityId(service.id)
                 %}
                 <div class="col-lg-3 col-md-4 col-6 p-0">

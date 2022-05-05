@@ -1,0 +1,73 @@
+{% if records|length == 0 %}
+    <div class="alert alert-secondary" role="alert">
+        No health history records was found
+    </div>
+{% else %}
+    <table class="table datagrid" id="health-record-table">
+        <thead>
+        <tr>
+            <th class=" header-for-field-text text-left" dir="ltr">Date</th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">Code</th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">Position</th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">Diagnosis</th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">Doctor</th>
+
+            <th class=" header-for-field-text text-left" dir="ltr">Notes</th>
+
+            <th width="10px" dir="ltr">
+                <span class="sr-only">Actions</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in records %}
+            <tr data-id="{{ record.id }}">
+                <td data-label="createdAt" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.createdAt|date('Y-m-d H:i:s')}}">{{ record.createdAt|date('Y-m-d H:i:s')}}</span>
+                </td>
+                <td data-label="code" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.diagnosis.code }}">{{ record.diagnosis.code }}</span>
+                </td>
+                <td data-label="position" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.position.position }}">{{ record.position.position }}</span>
+                </td>
+                </td>
+                <td data-label="diagnosis" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.diagnosis.title }}">{{ record.diagnosis.title }}</span>
+                </td>
+                <td data-label="doctor" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.doctor.name ~ ' ' ~ record.doctor.surname }}">{{ record.doctor.name ~ ' ' ~ record.doctor.surname }}</span>
+                </td>
+                <td data-label="notes" class=" text-left field-text" dir="ltr">
+                    <span title="{{ record.notes }}">{{ record.notes }}</span>
+                </td>
+                <td class="actions actions-as-dropdown">
+                    <div class="dropdown dropdown-actions">
+                        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                            </svg>
+                        </a>
+
+{#                         set edit_url = ea_url()#}
+{#                            .setDashboard('App\\Controller\\Dashboard\\PatientDashboardController')#}
+{#                            .setController('App\\Controller\\Dashboard\\Doctor\\HealthRecordCrudController')#}
+{#                            .setAction('edit')#}
+{#                            .setEntityId(record.id)#}
+{#                        %}#}
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item health-record-edit-action" data-record-id="{{ record.id }}">Edit</a>
+                            <a class="dropdown-item text-danger health-record-delete-action action-label" data-record-id="{{ record.id }}">Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

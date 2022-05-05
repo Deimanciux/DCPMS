@@ -8,14 +8,14 @@
                 <h1 class="title">Reservation</h1>
             </div>
             <div class="col-6 text-right">
-                <button type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">New Reservation</button>
+                <button type="button" data-calendar-user="{{user}}" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">New Reservation</button>
             </div>
         </div>
     </div>
 {% endblock %}
 
 {% block main %}
-    {{ include('patient-dashboard/_reservation_form.html.twig') }}
+    {{ include('dashboard/_reservation_form.html.twig') }}
     <div class="row">
         <div id="calendar"></div>
     </div>

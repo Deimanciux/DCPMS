@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\AdminDashboard;
+namespace App\Controller\Dashboard\ClinicWorker;
 
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
@@ -36,26 +36,15 @@ class PatientCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        parent::configureActions($actions);
+        parent::configureActions($actions)->remove(Action::INDEX, Action::BATCH_DELETE);
 
-        $viewHealthRecords = Action::new('viewHealthRecords', 'Health records')
-            ->linkToRoute('app_health_records_by_patient', function (User $user): array {
+        $viewReservations = Action::new('viewReservations', 'Reservation')
+            ->linkToRoute('reservation_by_user', function (User $user): array {
                 return [
                     'user'   => $user->getId(),
                 ];
             });
 
-        return $actions->add(Crud::PAGE_INDEX, $viewHealthRecords);
+        return $actions->add(Crud::PAGE_INDEX, $viewReservations);
     }
-
-    /*
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
-    }
-    */
 }

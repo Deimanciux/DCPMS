@@ -22,6 +22,7 @@ class DashboardController extends AbstractDashboardController
 {
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin', name: 'admin')]
+
     public function index(): Response
     {
         return $this->render('admin/index.html.twig');
@@ -69,6 +70,7 @@ class DashboardController extends AbstractDashboardController
             'fa fa-file-medical',
             'app_health_records_admin'
         )->setPermission(User::ROLE_PATIENT);
+
         yield MenuItem::linkToCrud('Patients', 'fas fa-clipboard-list', User::class)
               ->setController(PatientCrudController::class);
     }

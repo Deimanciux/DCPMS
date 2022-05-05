@@ -2,11 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace App\Controller\PatientDashboard;
+namespace App\Controller\Dashboard\Patient;
 
+use App\Controller\Dashboard\PatientDashboardController;
 use App\DTO\ReservationDTO;
 use App\Entity\Reservation;
 use App\Entity\Service;
+use App\Entity\User;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use App\Repository\ServiceRepository;
@@ -30,17 +32,16 @@ class ReservationController extends AbstractController
     ) {
     }
 
-    #[Route('/patient-reservations', name: 'app_patient_reservation')]
-    public function index(Request $request): Response
+    #[Route('/reservations/{user}', name: 'reservation_by_user')]
+    public function index(Request $request, User $user): Response
     {
         $form = $this->createForm(ReservationType::class, new Reservation(), [
-            'action' => $this->generateUrl('app_patient_reservation')
+            'action' => $this->generateUrl('reservation_by_user', ['user' => $user->getId()])
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
 
             /**
              * @var Reservation
@@ -67,7 +68,7 @@ class ReservationController extends AbstractController
                     $this->adminUrlGenerator
                         ->setDashboard(PatientDashboardController::class)
                         ->setController(self::class)
-                        ->setRoute('app_patient_reservation')
+                        ->setRoute('reservation_by_user', ['user' => $user->getId()])
                         ->generateUrl()
                 );
             }
@@ -79,20 +80,20 @@ class ReservationController extends AbstractController
                 $this->adminUrlGenerator
                     ->setDashboard(PatientDashboardController::class)
                     ->setController(self::class)
-                    ->setRoute('app_patient_reservation')
+                    ->setRoute('reservation_by_user', ['user' => $user->getId()])
                     ->generateUrl()
             );
         }
 
-        return $this->render('patient-dashboard/reservation_calendar.html.twig', [
+        return $this->render('dashboard/reservation_calendar.html.twig', [
             'form' => $form->createView(),
+            'user' => $user->getId()
         ]);
     }
 
-    #[Route('/reservations', name: 'get_reservations', methods:"GET")]
-    public function getReservations(): Response
+    #[Route('/reservations/user/{user}', name: 'get_reservations', methods:"GET")]
+    public function getReservations(User $user): Response
     {
-        $user = $this->getUser();
         $reservations = $this->reservationRepository->findBy(['user' => $user]);
 
         return $this->json (

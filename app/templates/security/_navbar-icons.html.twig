@@ -1,4 +1,4 @@
- {% if is_granted('ROLE_PATIENT') %}
+ {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     {{ user_menu_avatar }}
 {% else %}
     <a class="m-3" style="color: #7a7571;" href="{{ path('login') }}">Login</a>

@@ -55,7 +55,7 @@ class RegistrationController extends AbstractController
 //                                ->htmlTemplate('registration/confirmation_email.html.twig')
 //                        );
 
-            return $this->redirectToRoute('patient_dashboard');
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('security/register.html.twig', [
