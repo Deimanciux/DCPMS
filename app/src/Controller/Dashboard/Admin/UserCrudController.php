@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Controller\AdminDashboard;
+namespace App\Controller\Dashboard\Admin;
 
 use App\Entity\User;
-use Doctrine\DBAL\Types\DateTimeType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;

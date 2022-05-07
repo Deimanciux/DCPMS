@@ -36,7 +36,9 @@ class PatientCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        parent::configureActions($actions)->remove(Action::INDEX, Action::BATCH_DELETE);
+        parent::configureActions($actions)->remove(Action::INDEX, Action::BATCH_DELETE)
+            ->remove(Action::INDEX, Action::EDIT)
+            ->remove(Action::INDEX, Action::DELETE);
 
         $viewReservations = Action::new('viewReservations', 'Reservation')
             ->linkToRoute('reservation_by_user', function (User $user): array {
