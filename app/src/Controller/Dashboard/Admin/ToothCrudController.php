@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\AdminDashboard;
+namespace App\Controller\Dashboard\Admin;
 
 use App\Entity\Tooth;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
