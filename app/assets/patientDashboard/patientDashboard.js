@@ -6,7 +6,7 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
 let reservation_id = $('#reservation_id');
-let reservation_title = $('#reservation_title');
+let reservation_reasonOfVisit = $('#reservation_reasonOfVisit');
 let reservation_startDate = $('#reservation_startDate');
 let reservation_endDate = $('#reservation_endDate');
 let reservation_service = $('#reservation_service');
@@ -16,10 +16,14 @@ let calendar_alert_danger = $('#calendar_alert');
 let empty_value_message = ' can not be empty';
 let calendar_container = $('#calendar');
 let reservation_doctor = $('#reservation_doctor');
+let reservation_patient = $('#reservation_user');
 let reservation_doctor_option = $('#reservation_doctor option');
+let reservation_delete = $('#reservation_delete');
+let reservation_save = $('#reservation_save');
 let new_reservation = $('#new-reservation');
 let show_all_records = $('#show-all-records');
-let data_calendar_user = new_reservation.attr('data-calendar-user')
+let data_calendar_user = new_reservation.attr('data-calendar-user');
+let exampleModalLabel = $('#exampleModalLabel');
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -49,8 +53,11 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
         },
     ],
     eventClick: async function(info) {
+        setValues(info.event);
         await getDoctorsByService(reservation_service.val())
         setValues(info.event);
+        exampleModalLabel.text('Edit reservation');
+        await hideFieldsDependingOnRole();
         new bootstrap.Modal($('#exampleModal')).show();
     },
 
@@ -90,9 +97,7 @@ function sendReservationEditRequest(event) {
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         data: JSON.stringify({
-            title : event.title,
             service: event.extendedProps.service,
-            doctor: event.extendedProps.doctor,
             start : event.start.toISOString(),
             end : event.end.toISOString(),
         }),
@@ -140,21 +145,28 @@ async function getDoctorsByService(id) {
 }
 
 function setValues(event) {
+    console.log(event.extendedProps.patient)
     reservation_id.val(event.id);
-    reservation_title.val(event.title);
+    reservation_reasonOfVisit.val(event.extendedProps.reasonOfVisit);
     reservation_startDate.val(event.start.toISOString().slice(0, 16));
     reservation_endDate.val(event.start.toISOString().slice(0, 16));
     reservation_service.val(event.extendedProps.service);
     reservation_doctor.val(event.extendedProps.doctor);
+    reservation_patient.val(event.extendedProps.patient);
+    reservation_delete.css('display', 'block');
+
 }
 
 function clearValues() {
-    reservation_id.val('')
-    reservation_title.val('')
-    reservation_startDate.val('')
-    reservation_endDate.val('')
-    reservation_service.val('')
+    reservation_id.val('');
+    reservation_reasonOfVisit.val('');
+    reservation_startDate.val('');
+    reservation_endDate.val('');
+    reservation_service.val('');
     reservation_doctor.parent().hide();
+    reservation_patient.val('');
+    reservation_delete.css('display', 'none');
+    exampleModalLabel.text('Create new reservation');
 }
 
 new_reservation.on('click', async function (event) {
@@ -165,13 +177,16 @@ new_reservation.on('click', async function (event) {
         await getDoctorsByService(reservation_service.val())
         reservation_doctor.parent().show();
     }
+
+    await hideFieldsDependingOnRole();
 })
 
-$('#reservation_save').on('click', function (event) {
+reservation_save.on('click', function (event) {
     event.preventDefault();
+    reservation_alert_danger.css('display', 'none');
 
-    if (reservation_title.val().trim().length === 0) {
-        display_error('Title', empty_value_message, reservation_alert_danger);
+    if (reservation_reasonOfVisit.val().trim().length === 0) {
+        display_error('Reason of visit', empty_value_message, reservation_alert_danger);
         return;
     }
 
@@ -185,11 +200,29 @@ $('#reservation_save').on('click', function (event) {
         return;
     }
 
+    if (reservation_doctor.val() === null) {
+        display_error('Doctor', empty_value_message, reservation_alert_danger);
+        return;
+    }
+
+    if (reservation_patient.val() === null) {
+        display_error('Patient', empty_value_message, reservation_alert_danger);
+        return;
+    }
+
+    let events = calendar.getEvents();
+    for (let i = 0; i < events.length; i++) {
+        if (events[i].extendedProps.service == reservation_service.val() && events[i].start > Date.now() && reservation_id.val() === '') {
+            display_error(null, 'Only one reservation can be created per service', reservation_alert_danger);;
+            return;
+        }
+    }
+
     form.submit();
 });
 
 
-$('#reservation_delete').on('click', async function (event) {
+reservation_delete.on('click', async function (event) {
     event.preventDefault();
 
     await sendReservationDeleteRequest(reservation_id.val())
@@ -198,6 +231,10 @@ $('#reservation_delete').on('click', async function (event) {
 
 reservation_service.on('change', async function (event) {
     event.preventDefault();
+    if ($.inArray('ROLE_DOCTOR', roles) !== -1 || $.inArray('ROLE_ADMIN', roles) !== -1) {
+       return;
+    }
+
     await getDoctorsByService(reservation_service.val())
 });
 
@@ -250,6 +287,7 @@ let patient;
 let toothData = $('.tooth-data');
 let roles;
 let newHealthRecord = $('#new-health-record');
+let doctor_services;
 
 async function initHealthRecordPage() {
     await getPositions();
@@ -265,6 +303,32 @@ async function getPositions() {
         dataType: 'json',
         success: function (response) {
             positions = response.data;
+        },
+        error: function (response) {
+        }
+    });
+}
+
+async function getRoles(userId) {
+    await $.ajax({
+        method: "GET",
+        url: "/user/roles/" + userId,
+        dataType: 'json',
+        success: function (response) {
+            roles = response.data;
+        },
+        error: function (response) {
+        }
+    });
+}
+
+async function getServices(userId) {
+    await $.ajax({
+        method: "GET",
+        url: "/service/doctor/" + userId,
+        dataType: 'json',
+        success: function (response) {
+            doctor_services = response.data;
         },
         error: function (response) {
         }
@@ -368,7 +432,7 @@ function addEventsOnTooth() {
 async function makeActionsAfterToothClick(position) {
     await getHealthRecordTemplateByPositionAndUser(patient, position.position);
 
-    if ($.inArray('ROLE_DOCTOR', roles) || $.inArray('ROLE_ADMIN', roles)) {
+    if ($.inArray('ROLE_DOCTOR', roles) !== -1 || $.inArray('ROLE_ADMIN', roles) !== -1) {
         modalHealthRecordPosition.val(position.id);
         new bootstrap.Modal($('#healthRecordModal')).show();
     }
@@ -431,6 +495,34 @@ function clearHealthRecordValues() {
     modalHealthRecordPosition.val('');
     modalHealthRecordDiagnosis.val('');
     modalHealthRecordNotes.val('');
+}
+
+async function hideFieldsDependingOnRole() {
+    await getRoles(data_calendar_user);
+
+    if ($.inArray('ROLE_DOCTOR', roles) !== -1 || $.inArray('ROLE_ADMIN', roles) !== -1) {
+        reservation_doctor.val(data_calendar_user);
+        reservation_doctor.parent().css("display", "none");
+        reservation_service.empty();
+        await getServices(data_calendar_user);
+
+        if (doctor_services.length === 0) {
+            display_error(null, 'Assign yourself to at least one service', reservation_alert_danger);
+            reservation_service.parent().css("display", "none");
+            reservation_save.css("display", "none");
+        }
+
+        if (doctor_services !== undefined) {
+            for (let i = 0; i < doctor_services.length; i++) {
+                reservation_service.append(new Option(doctor_services[i].title, doctor_services[i].id));
+            }
+        }
+    }
+
+    if ($.inArray('ROLE_PATIENT', roles) !== -1) {
+        reservation_patient.val(data_calendar_user);
+        reservation_patient.parent().css('display', 'none');
+    }
 }
 
 initHealthRecordPage();

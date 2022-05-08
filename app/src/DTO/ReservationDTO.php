@@ -12,7 +12,7 @@ class ReservationDTO
 {
     public function __construct(
         private int $id,
-        private ?string $title,
+        private ?string $reasonOfVisit,
         private UserInterface $user,
         private ?Service $service,
         private \DateTimeInterface $startDate,
@@ -26,9 +26,9 @@ class ReservationDTO
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getReasonOfVisit(): ?string
     {
-        return $this->title;
+        return $this->reasonOfVisit;
     }
 
     public function getUser(): ?UserInterface
@@ -54,10 +54,5 @@ class ReservationDTO
     public function getDoctor(): User
     {
         return $this->doctor;
-    }
-
-    public function setDoctor(User $doctor): void
-    {
-        $this->doctor = $doctor;
     }
 }

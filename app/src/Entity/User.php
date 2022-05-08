@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use \DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -96,6 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->patientReservations = new ArrayCollection();
         $this->healthRecords = new ArrayCollection();
         $this->doctorHealthRecords = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFullName();
     }
 
     public function getId(): ?int
@@ -444,5 +448,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return sprintf("%s %s", $this->name, $this->surname);
     }
 }

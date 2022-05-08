@@ -25,7 +25,7 @@ class ReservationUpdater
         }
 
         $existingReservation
-            ->setTitle($reservation->getTitle())
+            ->setReasonOfVisit($reservation->getReasonOfVisit())
             ->setUser($reservation->getUser())
             ->setService($reservation->getService())
             ->setStartDate($reservation->getStartDate())

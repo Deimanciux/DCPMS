@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -14,15 +15,14 @@ class Reservation
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private ?string $title;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private UserInterface $user;
+    #[Assert\NotBlank]
+    private ?UserInterface $user = null;
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
     private ?Service $service = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -33,7 +33,10 @@ class Reservation
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'patientReservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private User $doctor;
+    private ?User $doctor = null;
+
+    #[ORM\Column(type: 'string', length: 200, nullable: true)]
+    private string $reasonOfVisit;
 
     public function getId(): ?int
     {
@@ -43,18 +46,6 @@ class Reservation
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getStartDate(): \DateTimeInterface
@@ -113,6 +104,18 @@ class Reservation
     public function setDoctor(?User $doctor): self
     {
         $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getReasonOfVisit(): ?string
+    {
+        return $this->reasonOfVisit;
+    }
+
+    public function setReasonOfVisit(?string $reasonOfVisit): self
+    {
+        $this->reasonOfVisit = $reasonOfVisit;
 
         return $this;
     }

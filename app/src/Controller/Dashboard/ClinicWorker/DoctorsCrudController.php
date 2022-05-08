@@ -43,6 +43,7 @@ class DoctorsCrudController extends AbstractCrudController
     {
         parent::configureActions($actions)->remove(Action::INDEX, Action::BATCH_DELETE)
             ->remove(Action::INDEX, Action::EDIT)
+            ->remove(Action::INDEX, Action::NEW)
             ->remove(Action::INDEX, Action::DELETE);
 
         $viewReservations = Action::new('viewReservations', 'Reservation')

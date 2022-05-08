@@ -26,7 +26,7 @@
             <p style="text-align: justify;">{{ service.description }}</p>
 
             {% if is_granted('ROLE_PATIENT')%}
-                <button data-service-id="{{ service.id }}" type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Make a reservation</button>
+                <button data-service-id="{{ service.id }}" data-calendar-user="{{app.user.id}}" type="button" id="new-reservation" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Make a reservation</button>
             {% else %}
                 <a class="btn btn-primary" href="{{ path('login') }}" role="button">Login and make reservation</a>
             {% endif %}
