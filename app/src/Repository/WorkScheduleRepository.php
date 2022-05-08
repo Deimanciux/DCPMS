@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\WorkSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,32 +46,16 @@ class WorkScheduleRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return WorkSchedule[] Returns an array of WorkSchedule objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getCreatedWeekdays(User $user): array
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
+        $result =  $this->createQueryBuilder('w')
+            ->select('w.weekDay')
+            ->where('w.user = :user')
+            ->setParameter('user', $user)
             ->getQuery()
-            ->getResult()
+            ->getArrayResult()
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?WorkSchedule
-    {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return array_column($result, 'weekDay');
     }
-    */
 }

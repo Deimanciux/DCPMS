@@ -11,9 +11,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -25,11 +27,6 @@ class ReservationType extends AbstractType
     {
         $builder
             ->setAction($options['action'])
-            ->add('startDate', DateTimeType::class, [
-                'widget' => 'single_text',
-                'html5' => false,
-                'input' => 'datetime_immutable',
-            ])
             ->add('reasonOfVisit', TextType::class)
             ->add('service', EntityType::class, [
                 'class' => Service::class,
@@ -38,6 +35,18 @@ class ReservationType extends AbstractType
             ->add('doctor', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'name'
+            ])
+            ->add('startDate', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'input' => 'datetime_immutable',
+                'mapped' => false,
+            ])
+            ->add('startTime', TimeType::class, [
+                'widget' => 'single_text',
+                'mapped' => false,
+                'html5' => false,
+                'input' => 'datetime_immutable',
             ])
             ->add('user', EntityType::class, [
                 'label' => 'Patient',

@@ -10,9 +10,17 @@
                 {{ form_start(form) }}
                 {{ form_row(form.id) }}
                 {{ form_row(form.reasonOfVisit) }}
-                {{ form_row(form.startDate) }}
+{#                {{ form_row(form.startDate) }}#}
                 {{ form_row(form.service) }}
                 {{ form_row(form.doctor) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.startDate) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(form.startTime) }}
+                    </div>
+                </div>
                 {{ form_row(form.user) }}
             </div>
             <div class="modal-footer">
