@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -43,5 +44,17 @@ class ReservationRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    public function getReservationsByDate(User $doctor, \DateTimeImmutable $dateFrom): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.doctor = :doctor')
+            ->andWhere('r.startDate >= :from and r.startDate <= :to')
+            ->setParameter('doctor', $doctor)
+            ->setParameter('from', $dateFrom->format('Y-m-d'). ' 08:00')
+            ->setParameter('to', $dateFrom->format('Y-m-d'). ' 18:00')
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -4,10 +4,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
+import 'jquery-datetimepicker';
 
 let reservation_id = $('#reservation_id');
 let reservation_reasonOfVisit = $('#reservation_reasonOfVisit');
 let reservation_startDate = $('#reservation_startDate');
+let reservation_startTime = $('#reservation_startTime');
 let reservation_endDate = $('#reservation_endDate');
 let reservation_service = $('#reservation_service');
 let form = $('form[name="reservation"]')
@@ -24,6 +26,8 @@ let new_reservation = $('#new-reservation');
 let show_all_records = $('#show-all-records');
 let data_calendar_user = new_reservation.attr('data-calendar-user');
 let exampleModalLabel = $('#exampleModalLabel');
+let times;
+let date = new Date();
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -144,11 +148,30 @@ async function getDoctorsByService(id) {
     });
 }
 
+async function getAvailableTimes(date, doctor, service) {
+    await $.ajax({
+        method: "GET",
+        url: '/reservation/time/' + date + '/doctor/' + doctor + '/service/' + service,
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            console.log(response.data);
+            times = response.data;
+
+            $(reservation_startTime).datetimepicker({
+                datepicker:false,
+                format: 'H:i',
+                allowTimes: times
+            });
+        },
+        error: function (response) {
+        }
+    });
+}
+
 function setValues(event) {
-    console.log(event.extendedProps.patient)
     reservation_id.val(event.id);
     reservation_reasonOfVisit.val(event.extendedProps.reasonOfVisit);
-    reservation_startDate.val(event.start.toISOString().slice(0, 16));
+    reservation_startDate.val(event.start.toISOString().slice(0, 10));
     reservation_endDate.val(event.start.toISOString().slice(0, 16));
     reservation_service.val(event.extendedProps.service);
     reservation_doctor.val(event.extendedProps.doctor);
@@ -212,11 +235,13 @@ reservation_save.on('click', function (event) {
 
     let events = calendar.getEvents();
     for (let i = 0; i < events.length; i++) {
-        if (events[i].extendedProps.service == reservation_service.val() && events[i].start > Date.now() && reservation_id.val() === '') {
+        if (events[i].extendedProps.service == reservation_service.val() && events[i].start > Date.now() && reservation_id.val() === '' && events[i].extendedProps.patient == reservation_patient.val()) {
             display_error(null, 'Only one reservation can be created per service', reservation_alert_danger);;
             return;
         }
     }
+
+
 
     form.submit();
 });
@@ -268,8 +293,31 @@ async function init() {
     }
 
     checkIfFieldsShouldBeHidden();
-    reservation_startDate.attr('type', 'datetime-local');
+    // reservation_startDate.attr('type', 'datetime-local');
+
+    $(reservation_startDate).attr('autocomplete', 'off');
+    $(reservation_startTime).attr('autocomplete', 'off');
+    $(reservation_startDate).datetimepicker({
+        timepicker:false,
+        format: 'Y-m-d',
+        minDate: date.setDate(date.getDate() + 1),
+        onChangeDateTime: async function() {
+            console.log(reservation_startDate.val());
+            await getTimesByRole();
+        }
+    });
+
     $('.title').addClass('p-0');
+}
+
+async function getTimesByRole() {
+    if ($.inArray('ROLE_DOCTOR', roles) !== -1 || $.inArray('ROLE_ADMIN', roles) !== -1) {
+        await getAvailableTimes(reservation_startDate.val(), data_calendar_user, reservation_service.val())
+    }
+
+    if ($.inArray('ROLE_PATIENT', roles) !== -1) {
+        await getAvailableTimes(reservation_startDate.val(), reservation_doctor.val(), reservation_service.val())
+    }
 }
 
 init();

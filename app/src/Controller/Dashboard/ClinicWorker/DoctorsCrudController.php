@@ -15,11 +15,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class DoctorsCrudController extends AbstractCrudController
 {
     public function __construct(
-        private EntityRepository $entityRepository
+        private EntityRepository $entityRepository,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
     }
 
@@ -53,6 +55,19 @@ class DoctorsCrudController extends AbstractCrudController
            ];
         });
 
-        return $actions->add(Crud::PAGE_INDEX, $viewReservations);
+        $addWorkingHours = Action::new('workingHours', 'Add working hours')
+            ->linkToCrudAction(Action::INDEX)
+            ->linkToUrl(function (User $user) {
+                $url = $this->adminUrlGenerator
+                    ->setAction(Action::INDEX)
+                    ->setController(WorkScheduleCrudController::class)
+                    ->setEntityId($user->getId())
+                    ->generateUrl();
+
+                return $this->redirect($url);
+            });
+
+        return $actions->add(Crud::PAGE_INDEX, $viewReservations)
+            ->add(Crud::PAGE_INDEX, $addWorkingHours);
     }
 }

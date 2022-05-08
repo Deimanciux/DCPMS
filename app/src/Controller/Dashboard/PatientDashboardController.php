@@ -10,6 +10,7 @@ use App\Controller\Dashboard\Admin\ServiceCrudController;
 use App\Controller\Dashboard\Admin\ToothCrudController;
 use App\Controller\Dashboard\Admin\UserCrudController;
 use App\Controller\Dashboard\Admin\WorkScheduleCrudController;
+use App\Controller\Dashboard\Doctor\WorkScheduleCrudController as DoctorWorkScheduleCrudController;
 use App\Controller\Dashboard\ClinicWorker\DoctorsCrudController;
 use App\Controller\Dashboard\ClinicWorker\PatientCrudController;
 use App\Controller\Dashboard\Doctor\PatientCrudController as DoctorPatientCrudController;
@@ -84,7 +85,8 @@ class PatientDashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return parent::configureAssets()
-            ->addWebpackEncoreEntry('patientDashboard');
+            ->addWebpackEncoreEntry('patientDashboard')
+        ->addWebpackEncoreEntry('appStyle');
     }
 
     public function configureMenuItems(): iterable
@@ -109,18 +111,8 @@ class PatientDashboardController extends AbstractDashboardController
             }
 
             if (in_array(User::ROLE_ADMIN, $this->getUser()->getRoles(), true)) {
-                yield MenuItem::section('PATIENT');
-                foreach ( $this->getPatientMenuItems() as $menuItem) {
-                    yield $menuItem;
-                }
-
                 yield MenuItem::section('CLINIC WORKER');
                 foreach ( $this->getClinicWorkerMenuItems() as $menuItem) {
-                    yield $menuItem;
-                }
-
-                yield MenuItem::section('DOCTOR');
-                foreach ($this->getDoctorMenuItems() as $menuItem) {
                     yield $menuItem;
                 }
 
@@ -180,6 +172,12 @@ class PatientDashboardController extends AbstractDashboardController
             'fas fa-clipboard-list',
             User::class
         )->setController(DoctorPatientCrudController::class);
+
+        yield MenuItem::linkToCrud(
+            'Work Schedule',
+            'fas fa-calendar-alt',
+            WorkSchedule::class
+        )->setController(DoctorWorkScheduleCrudController::class);
     }
 
     private function getAdminMenuItems(): iterable
@@ -189,12 +187,6 @@ class PatientDashboardController extends AbstractDashboardController
             'fa fa-users',
             User::class
         )->setController(UserCrudController::class);
-
-        yield MenuItem::linkToCrud(
-            'Health Records',
-            'fa fa-prescription-bottle',
-            HealthRecord::class
-        )->setController(HealthRecordCrudController::class);
 
         yield MenuItem::linkToCrud(
             'Diagnosis',
@@ -213,18 +205,6 @@ class PatientDashboardController extends AbstractDashboardController
             'fa fa-suitcase',
             Service::class
         )->setController(ServiceCrudController::class);
-
-        yield MenuItem::linkToCrud(
-            'Teeth',
-            'fas fa-tooth',
-            Tooth::class
-        )->setController(ToothCrudController::class);
-
-        yield MenuItem::linkToCrud(
-            'Work Schedule',
-            'fas fa-calendar-alt',
-            WorkSchedule::class
-        )->setController(WorkScheduleCrudController::class);
 
         yield MenuItem::linkToCrud(
             'Registrations',

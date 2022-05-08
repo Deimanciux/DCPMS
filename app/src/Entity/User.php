@@ -87,6 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: HealthRecord::class, orphanRemoval: true)]
     private Collection $doctorHealthRecords;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WorkSchedule::class)]
+    private $workSchedules;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -95,6 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->patientReservations = new ArrayCollection();
         $this->healthRecords = new ArrayCollection();
         $this->doctorHealthRecords = new ArrayCollection();
+        $this->workSchedules = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -453,5 +457,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): string
     {
         return sprintf("%s %s", $this->name, $this->surname);
+    }
+
+    /**
+     * @return Collection<int, WorkSchedule>
+     */
+    public function getWorkSchedules(): Collection
+    {
+        return $this->workSchedules;
+    }
+
+    public function addWorkSchedule(WorkSchedule $workSchedule): self
+    {
+        if (!$this->workSchedules->contains($workSchedule)) {
+            $this->workSchedules[] = $workSchedule;
+            $workSchedule->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkSchedule(WorkSchedule $workSchedule): self
+    {
+        if ($this->workSchedules->removeElement($workSchedule)) {
+            // set the owning side to null (unless already changed)
+            if ($workSchedule->getUser() === $this) {
+                $workSchedule->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
