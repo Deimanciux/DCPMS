@@ -36,9 +36,10 @@ class ReservationController extends AbstractController
     public function index(Request $request, User $user): Response
     {
         $form = $this->createForm(ReservationType::class, new Reservation(), [
-            'action' => $this->generateUrl('reservation_by_user', ['user' => $user->getId()])
+            'action' => $this->generateUrl('reservation_by_user', ['user' => $user->getId()]),
         ]);
 
+        $loggedUser = $this->getUser();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -47,7 +48,6 @@ class ReservationController extends AbstractController
              * @var Reservation
              */
             $reservation = $form->getData();
-            $reservation->setUser($user);
             $reservation->setEndDate($this->getEndDate($reservation));
 
             if ($reservation->getId() !== null) {
@@ -55,7 +55,7 @@ class ReservationController extends AbstractController
                 $this->reservationUpdater->update(
                     new ReservationDTO(
                         $reservation->getId(),
-                        $reservation->getTitle(),
+                        $reservation->getReasonOfVisit(),
                         $reservation->getUser(),
                         $reservation->getService(),
                         $reservation->getStartDate(),
@@ -94,7 +94,11 @@ class ReservationController extends AbstractController
     #[Route('/reservations/user/{user}', name: 'get_reservations', methods:"GET")]
     public function getReservations(User $user): Response
     {
-        $reservations = $this->reservationRepository->findBy(['user' => $user]);
+        if (in_array(User::ROLE_DOCTOR, $user->getRoles(), true)) {
+            $reservations = $this->reservationRepository->findBy(['doctor' => $user]);
+        } else {
+            $reservations = $this->reservationRepository->findBy(['user' => $user]);
+        }
 
         return $this->json (
             ['data' => $this->generateResponse($reservations)]
@@ -125,7 +129,6 @@ class ReservationController extends AbstractController
             return $this->json(['error' => true, 'message' => 'service not found'], Response::HTTP_BAD_REQUEST);
         }
 
-        $reservation->setTitle(trim($data['title']));
         $reservation->setService($service);
         $reservation->setStartDate($startDateTime);
         $reservation->setEndDate($endDateTime);
@@ -152,6 +155,9 @@ class ReservationController extends AbstractController
         return $this->json(['success' => true], Response::HTTP_ACCEPTED);
     }
 
+    /**
+     * @param Reservation[] $reservations
+     */
     private function generateResponse(array $reservations): array
     {
         $data = [];
@@ -171,11 +177,13 @@ class ReservationController extends AbstractController
 
             $data[] = [
                 'id' => $reservation->getId(),
-                'title' => $reservation->getTitle(),
+                'title' => $reservation->getService()->getTitle(),
                 'start' => $reservation->getStartDate()->format('Y-m-d\TH:i'),
                 'end' => $reservation->getEndDate()->format('Y-m-d\TH:i'),
                 'service' => $reservation->getService()->getId(),
-                'doctor' => $reservation->getDoctor()->getId()
+                'doctor' => $reservation->getDoctor()->getId(),
+                'patient' => $reservation->getUser()->getId(),
+                'reasonOfVisit' => $reservation->getReasonOfVisit(),
             ];
         }
 

@@ -45,27 +45,21 @@
                 <td data-label="notes" class=" text-left field-text" dir="ltr">
                     <span title="{{ record.notes }}">{{ record.notes }}</span>
                 </td>
-                <td class="actions actions-as-dropdown">
-                    <div class="dropdown dropdown-actions">
-                        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                            </svg>
-                        </a>
-
-{#                         set edit_url = ea_url()#}
-{#                            .setDashboard('App\\Controller\\Dashboard\\PatientDashboardController')#}
-{#                            .setController('App\\Controller\\Dashboard\\Doctor\\HealthRecordCrudController')#}
-{#                            .setAction('edit')#}
-{#                            .setEntityId(record.id)#}
-{#                        %}#}
-
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item health-record-edit-action" data-record-id="{{ record.id }}">Edit</a>
-                            <a class="dropdown-item text-danger health-record-delete-action action-label" data-record-id="{{ record.id }}">Delete</a>
+                {% if app.user.email == record.doctor.email %}
+                    <td class="actions actions-as-dropdown">
+                        <div class="dropdown dropdown-actions">
+                            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                                </svg>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item health-record-edit-action" data-record-id="{{ record.id }}">Edit</a>
+                                <a class="dropdown-item text-danger health-record-delete-action action-label" data-record-id="{{ record.id }}">Delete</a>
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

@@ -9,10 +9,11 @@
             <div class="modal-body">
                 {{ form_start(form) }}
                 {{ form_row(form.id) }}
-                {{ form_row(form.title) }}
+                {{ form_row(form.reasonOfVisit) }}
                 {{ form_row(form.startDate) }}
                 {{ form_row(form.service) }}
                 {{ form_row(form.doctor) }}
+                {{ form_row(form.user) }}
             </div>
             <div class="modal-footer">
                 {{ form_widget(form.save) }}
