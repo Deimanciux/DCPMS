@@ -22,7 +22,7 @@ class ToothTableType extends AbstractType
 
         foreach ($positions as $position) {
             $builder->add('tooth' . $position->getPosition(), CheckboxType::class, [
-                'label' => 'Tooth [' . $position->getPosition() . ']',
+                'label' => $position->getTitle(). '[ ' . $position->getPosition() . ']',
                 'required' => false,
                 'attr' => [
                     'checked' => true

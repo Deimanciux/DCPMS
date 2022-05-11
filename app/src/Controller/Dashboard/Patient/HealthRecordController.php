@@ -32,7 +32,7 @@ class HealthRecordController extends AbstractController
         $user = $this->getUser();
 
         $healthRecords = $this->healthRecordRepository->findBy(['user' => $user]);
-        $teethBySequence = $this->toothRepository->getTeethBySequence();
+        $teethBySequence = $this->toothRepository->getTeethBySequence($user);
 
         return $this->render('dashboard/patient/health-record.html.twig', [
             'records' => $healthRecords,

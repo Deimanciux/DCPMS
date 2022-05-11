@@ -55,19 +55,6 @@ class DoctorsCrudController extends AbstractCrudController
            ];
         });
 
-        $addWorkingHours = Action::new('workingHours', 'Add working hours')
-            ->linkToCrudAction(Action::INDEX)
-            ->linkToUrl(function (User $user) {
-                $url = $this->adminUrlGenerator
-                    ->setAction(Action::INDEX)
-                    ->setController(WorkScheduleCrudController::class)
-                    ->setEntityId($user->getId())
-                    ->generateUrl();
-
-                return $this->redirect($url);
-            });
-
-        return $actions->add(Crud::PAGE_INDEX, $viewReservations)
-            ->add(Crud::PAGE_INDEX, $addWorkingHours);
+        return $actions->add(Crud::PAGE_INDEX, $viewReservations);
     }
 }

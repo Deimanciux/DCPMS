@@ -57,4 +57,16 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getUserReservationsByDate(User $user, \DateTimeImmutable $dateFrom): array
+    {
+        return $this->createQueryBuilder('r')
+                    ->where('r.user = :user')
+                    ->andWhere('r.startDate >= :from and r.startDate <= :to')
+                    ->setParameter('user', $user)
+                    ->setParameter('from', $dateFrom->format('Y-m-d'). ' 08:00')
+                    ->setParameter('to', $dateFrom->format('Y-m-d'). ' 18:00')
+                    ->getQuery()
+                    ->getResult();
+    }
 }
