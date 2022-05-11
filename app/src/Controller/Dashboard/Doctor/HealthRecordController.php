@@ -7,10 +7,13 @@ namespace App\Controller\Dashboard\Doctor;
 use App\Controller\Dashboard\PatientDashboardController;
 use App\DTO\HealthRecordDTO;
 use App\Entity\HealthRecord;
+use App\Entity\Tooth;
 use App\Entity\User;
 use App\Form\HealthRecordType;
+use App\Form\ToothTableType;
 use App\Repository\HealthRecordRepository;
 use App\Repository\PositionRepository;
+use App\Repository\ToothRepository;
 use App\Repository\UserRepository;
 use App\Service\HealthRecordUpdater;
 use App\Voter\HealthRecordVoter;
@@ -29,7 +32,8 @@ class HealthRecordController extends AbstractController
         private EntityManagerInterface $entityManager,
         private AdminUrlGenerator $adminUrlGenerator,
         private UserRepository $userRepository,
-        private HealthRecordUpdater $recordUpdater
+        private HealthRecordUpdater $recordUpdater,
+        private ToothRepository $toothRepository
     ) {
     }
 
@@ -83,10 +87,35 @@ class HealthRecordController extends AbstractController
 
         $healthRecord = new HealthRecord();
         $form = $this->createForm(HealthRecordType::class, $healthRecord);
-        $healthRecords = $this->healthRecordRepository->findBy(['user' => $user], ['updatedAt' => 'desc']);
-        $positions = $this->positionRepository->findBySequenceNumber();
+        $teethForm = $this->createForm(ToothTableType::class);
+        $healthRecords = $user->getHealthRecords();
+        $teethBySequence = $this->toothRepository->getTeethBySequence();
         $form->handleRequest($request);
+        $teethForm->handleRequest($request);
         $doctor = $this->getUser();
+
+        if ($teethForm->isSubmitted() && $teethForm->isValid()) {
+            $teeth = $teethForm->getData();
+            $positions = $this->positionRepository->findAll();
+
+            foreach ($positions as $position) {
+                $tooth = new Tooth();
+                $tooth->setIsRemoved(!$teeth['tooth'.$position->getPosition()]);
+                $tooth->setPosition($position);
+                $tooth->setUser($user);
+                $this->entityManager->persist($tooth);
+            }
+
+            $this->entityManager->flush();
+
+            return $this->redirect(
+                $this->adminUrlGenerator
+                    ->setDashboard(PatientDashboardController::class)
+                    ->setController(self::class)
+                    ->setRoute('app_health_records_by_user', ['user' => $user->getId()])
+                    ->generateUrl()
+            );
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $patientId = $form->get('user')->getData();
@@ -100,7 +129,7 @@ class HealthRecordController extends AbstractController
                     new HealthRecordDTO(
                         $healthRecord->getId(),
                         $healthRecord->getUser(),
-                        $healthRecord->getPosition(),
+                        $healthRecord->getTooth(),
                         $healthRecord->getNotes(),
                         $healthRecord->getDiagnosis(),
                         $healthRecord->getDoctor(),
@@ -131,9 +160,11 @@ class HealthRecordController extends AbstractController
 
         return $this->render('dashboard/doctor/health-record.html.twig', [
             'records' => $healthRecords,
-            'positions' => $positions,
+            'teeth' => $teethBySequence,
             'patient' => $user->getId(),
-            'form' => $form->createView()
+            'patientUser' => $user,
+            'form' => $form->createView(),
+            'teethForm' => $teethForm->createView()
         ]);
     }
 
@@ -165,10 +196,11 @@ class HealthRecordController extends AbstractController
             ['data' => [
                 'id' => $healthRecord->getId(),
                 'user' => $healthRecord->getUser()->getId(),
-                'position' => $healthRecord->getPosition()->getId(),
+                'tooth' => $healthRecord->getTooth()->getId(),
                 'notes' => $healthRecord->getNotes(),
                 'diagnosis' => $healthRecord->getDiagnosis()->getId(),
-                'doctor' => $healthRecord->getDoctor()->getId()
+                'doctor' => $healthRecord->getDoctor()->getId(),
+                'isRemoved' => $healthRecord->getTooth()->getIsRemoved()
             ]]
         );
     }

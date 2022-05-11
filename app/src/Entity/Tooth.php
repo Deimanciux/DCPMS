@@ -18,11 +18,19 @@ class Tooth
     #[ORM\Column(type: 'boolean', nullable: true)]
     private bool $isRemoved;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private bool $isHealed;
+
+    #[ORM\ManyToOne(targetEntity: Position::class, inversedBy: 'teeth')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Position $position;
+
     #[ORM\OneToMany(mappedBy: 'tooth', targetEntity: HealthRecord::class)]
     private Collection $healthRecords;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private bool $isHealed;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'teeth')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
 
     public function __construct()
     {
@@ -42,6 +50,30 @@ class Tooth
     public function setIsRemoved(?bool $isRemoved): self
     {
         $this->isRemoved = $isRemoved;
+
+        return $this;
+    }
+
+    public function getIsHealed(): ?bool
+    {
+        return $this->isHealed;
+    }
+
+    public function setIsHealed(?bool $isHealed): self
+    {
+        $this->isHealed = $isHealed;
+
+        return $this;
+    }
+
+    public function getPosition(): ?Position
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?Position $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }
@@ -76,14 +108,14 @@ class Tooth
         return $this;
     }
 
-    public function getIsHealed(): ?bool
+    public function getUser(): ?User
     {
-        return $this->isHealed;
+        return $this->user;
     }
 
-    public function setIsHealed(?bool $isHealed): self
+    public function setUser(?User $user): self
     {
-        $this->isHealed = $isHealed;
+        $this->user = $user;
 
         return $this;
     }

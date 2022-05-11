@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PositionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PositionRepository::class)]
@@ -24,6 +26,14 @@ class Position
 
     #[ORM\Column(type: 'integer')]
     private int $sequenceNumber;
+
+    #[ORM\OneToMany(mappedBy: 'position', targetEntity: Tooth::class, orphanRemoval: true)]
+    private Collection $teeth;
+
+    public function __construct()
+    {
+        $this->teeth = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +84,36 @@ class Position
     public function setSequenceNumber(int $sequenceNumber): self
     {
         $this->sequenceNumber = $sequenceNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tooth>
+     */
+    public function getTeeth(): Collection
+    {
+        return $this->teeth;
+    }
+
+    public function addTooth(Tooth $tooth): self
+    {
+        if (!$this->teeth->contains($tooth)) {
+            $this->teeth[] = $tooth;
+            $tooth->setPosition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTooth(Tooth $tooth): self
+    {
+        if ($this->teeth->removeElement($tooth)) {
+            // set the owning side to null (unless already changed)
+            if ($tooth->getPosition() === $this) {
+                $tooth->setPosition(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,25 @@
+<div class="modal fade" id="teethModal" tabindex="-1" aria-labelledby="healthRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div style="display: none" id="healthRecordAlert" class="alert alert-danger" role="alert"></div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="healthRecordModalLabel">Create new teeth table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(teethForm) }}
+                <div class="row">
+                    {% for child in teethForm.children %}
+                        <div class="col-md-4">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" value="Save">
+                {{form_end(teethForm)}}
+            </div>
+        </div>
+    </div>
+</div>

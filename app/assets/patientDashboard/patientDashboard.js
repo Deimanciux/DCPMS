@@ -28,6 +28,33 @@ let data_calendar_user = new_reservation.attr('data-calendar-user');
 let exampleModalLabel = $('#exampleModalLabel');
 let times;
 let date = new Date();
+let formattedBusinessHours = [];
+
+let hoursByDayEl = $('#hoursByDay');
+let hoursByDayData = hoursByDayEl.data('value');
+let givenDays
+let defaultBusinessHours
+
+if (hoursByDayData !== undefined) {
+    givenDays = Object.keys(hoursByDayData).map(x => parseInt(x));
+    defaultBusinessHours = {
+        daysOfWeek: [ 1, 2, 3, 4, 5, 6, 0 ].filter(x => !givenDays.includes(x)),
+        startTime: '08:00',
+        endTime: '18:00'
+    }
+
+    for (const [key, value] of Object.entries(hoursByDayData)) {
+        formattedBusinessHours.push(
+            {
+                daysOfWeek: [ key ],
+                startTime: value.from,
+                endTime: value.to,
+            }
+        );
+    }
+
+    formattedBusinessHours.push(defaultBusinessHours);
+}
 
 let calendarEl = document.getElementById('calendar');
 let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -40,6 +67,8 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
     slotMinTime: "07:00:00",
     slotMaxTime: "22:00:00",
     scrollTimeReset: false,
+    nowIndicator: true,
+    firstDay: 1,
     eventOverlap: function(stillEvent, movingEvent) {
         display_error(null, 'Reservations can not overlap', calendar_alert_danger);
         return false;
@@ -49,13 +78,7 @@ let calendar = new FullCalendar.Calendar(calendarEl, {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,listWeek'
     },
-    businessHours: [
-        {
-            daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
-            startTime: '08:00',
-            endTime: '18:00'
-        },
-    ],
+    businessHours: formattedBusinessHours,
     eventClick: async function(info) {
         setValues(info.event);
         await getDoctorsByService(reservation_service.val())
@@ -154,7 +177,6 @@ async function getAvailableTimes(date, doctor, service) {
         url: '/reservation/time/' + date + '/doctor/' + doctor + '/service/' + service,
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-            console.log(response.data);
             times = response.data;
 
             $(reservation_startTime).datetimepicker({
@@ -172,6 +194,7 @@ function setValues(event) {
     reservation_id.val(event.id);
     reservation_reasonOfVisit.val(event.extendedProps.reasonOfVisit);
     reservation_startDate.val(event.start.toISOString().slice(0, 10));
+    reservation_startTime.val(event.start.toISOString().slice(11, 16));
     reservation_endDate.val(event.start.toISOString().slice(0, 16));
     reservation_service.val(event.extendedProps.service);
     reservation_doctor.val(event.extendedProps.doctor);
@@ -251,6 +274,7 @@ reservation_delete.on('click', async function (event) {
     event.preventDefault();
 
     await sendReservationDeleteRequest(reservation_id.val())
+
     form.submit();
 });
 
@@ -302,7 +326,6 @@ async function init() {
         format: 'Y-m-d',
         minDate: date.setDate(date.getDate() + 1),
         onChangeDateTime: async function() {
-            console.log(reservation_startDate.val());
             await getTimesByRole();
         }
     });
@@ -327,9 +350,10 @@ let positions;
 let rows =  $("tr");
 let healthRecordTableContainer =  $('#health-record-table-container');
 let modalHealthRecordId = $('#health_record_id');
-let modalHealthRecordPosition = $('#health_record_position');
+let modalHealthRecordTooth = $('#health_record_tooth');
 let modalHealthRecordDiagnosis = $('#health_record_diagnosis');
 let modalHealthRecordNotes = $('#health_record_notes');
+let modalHealthRecordIsRemoved = $('#health_record_isRemoved');
 let modalHealthRecordUser = $('#health_record_user');
 let patient;
 let toothData = $('.tooth-data');
@@ -377,20 +401,6 @@ async function getServices(userId) {
         dataType: 'json',
         success: function (response) {
             doctor_services = response.data;
-        },
-        error: function (response) {
-        }
-    });
-}
-
-async function getHealthRecordTemplateByTooth(position) {
-    await $.ajax({
-        method: "GET",
-        url: "/health-records/" + position,
-        dataType: 'json',
-        success: function (response) {
-            healthRecordTableContainer.empty();
-            healthRecordTableContainer.append(response.data)
         },
         error: function (response) {
         }
@@ -469,19 +479,21 @@ function addEventsOnTooth() {
                 removeStyleFromToothData()
                 $(event.target).css('backgroundColor', "#f7f7f9");
             }
-            makeActionsAfterToothClick(positions[i])
+            makeActionsAfterToothClick(positions[i], event.target.getAttribute('data-tooth-id'), event.target.getAttribute('data-is-removed'))
         })
-        rows.find("[data-position-image='" + positions[i].position + "']").on('click', async function () {
-            makeActionsAfterToothClick(positions[i])
+        rows.find("[data-position-image='" + positions[i].position + "']").on('click', async function (event) {
+            makeActionsAfterToothClick(positions[i], event.target.getAttribute('data-tooth-id'), event.target.getAttribute('data-is-removed'))
         })
     }
 }
 
-async function makeActionsAfterToothClick(position) {
+async function makeActionsAfterToothClick(position, toothId, isRemoved) {
     await getHealthRecordTemplateByPositionAndUser(patient, position.position);
 
     if ($.inArray('ROLE_DOCTOR', roles) !== -1 || $.inArray('ROLE_ADMIN', roles) !== -1) {
-        modalHealthRecordPosition.val(position.id);
+        clearHealthRecordValues();
+        modalHealthRecordIsRemoved.attr('checked', isRemoved === 'true' ? true : false);
+        modalHealthRecordTooth.val(toothId);
         new bootstrap.Modal($('#healthRecordModal')).show();
     }
 
@@ -532,17 +544,19 @@ newHealthRecord.on('click', async function () {
 
 function setHealthRecordValues(data) {
     modalHealthRecordId.val(data.id);
-    modalHealthRecordPosition.val(data.position);
+    modalHealthRecordTooth.val(data.tooth);
     modalHealthRecordDiagnosis.val(data.diagnosis);
     modalHealthRecordNotes.val(data.notes);
     modalHealthRecordUser.val(data.user);
+    modalHealthRecordIsRemoved.attr('checked', data.isRemoved)
 }
 
 function clearHealthRecordValues() {
     modalHealthRecordId.val('');
-    modalHealthRecordPosition.val('');
+    modalHealthRecordTooth.val('');
     modalHealthRecordDiagnosis.val('');
     modalHealthRecordNotes.val('');
+    modalHealthRecordIsRemoved.attr('checked', false);
 }
 
 async function hideFieldsDependingOnRole() {

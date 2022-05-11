@@ -1,22 +1,32 @@
 {% extends 'layout.html.twig' %}
 
 {% block content_title %}
-<div class = "container p-0">
+<div class = "container-fluid p-0">
     <div id="calendar_alert" style="font-size: 14px; display: none" class="alert alert-danger" role="alert"></div>
     <div class="row p-0">
         <div class="col-6 text-left content-header-title">
             <h1 class="title">Health records</h1>
         </div>
-        <div class="col-6 text-right">
-            <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
-        </div>
+
+        {% if patientUser.isPatient and patientUser.isVerified == false %}
+        {% else %}
+            <div class="col-6 text-right">
+                <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block main %}
-    {{ include('dashboard/_teeth-table.html.twig') }}
-    <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
-        {{ include('dashboard/patient/_health-record-table.html.twig') }}
-    </div>
+    {% if patientUser.isPatient and patientUser.isVerified == false %}
+        <div class="alert alert-danger">
+            To see reservation table your account needs to be verified.
+        </div>
+    {% else %}
+        {{ include('dashboard/_teeth-table.html.twig') }}
+        <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
+            {{ include('dashboard/patient/_health-record-table.html.twig') }}
+        </div>
+    {% endif %}
 {% endblock %}

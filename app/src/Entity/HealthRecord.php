@@ -38,6 +38,9 @@ class HealthRecord
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(targetEntity: Tooth::class, inversedBy: 'healthRecords')]
+    private Tooth $tooth;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +141,18 @@ class HealthRecord
     public function setDoctor(?UserInterface $user): self
     {
         $this->doctor = $user;
+
+        return $this;
+    }
+
+    public function getTooth(): Tooth
+    {
+        return $this->tooth;
+    }
+
+    public function setTooth(Tooth $tooth): self
+    {
+        $this->tooth = $tooth;
 
         return $this;
     }

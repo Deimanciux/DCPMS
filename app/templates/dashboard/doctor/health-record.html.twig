@@ -1,7 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block content_title %}
-    <div class = "container p-0">
+    <div class = "container-fluid p-0">
         <div id="calendar_alert" style="font-size: 14px; display: none" class="alert alert-danger" role="alert"></div>
         <div class="row p-0">
             <div class="col-6 text-left content-header-title">
@@ -9,18 +9,30 @@
             </div>
             <div class="col-6 text-right">
                 <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
-                <button type="button" id="new-health-record" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
+                <button type="button" id="new-health-record" data-user="{{ app.user.id }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
+                {% if patientUser.teeth | length == 0 %}
+                    <button type="button" id="new-health-record" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#teethModal" data-bs-whatever="@mdo">Create teeth table</button>
+                {% endif %}
             </div>
         </div>
     </div>
 {% endblock %}
 
 {% block main %}
-    {{ include('dashboard/_teeth-table.html.twig') }}
+
+    {% if patientUser.teeth | length == 0 %}
+        <div class="alert alert-warning">
+            Please, add teeth for the patient.
+        </div>
+    {% else %}
+        {{ include('dashboard/_teeth-table.html.twig') }}
+    {% endif %}
+
 
     <div id="health-record-table-container" data-patient-id="{{ patient is defined ? patient : '' }}">
         {{ include('dashboard/doctor/_health-record-table.html.twig') }}
     </div>
 
     {{ include('dashboard/doctor/_health_record_edit_modal.html.twig') }}
+    {{ include('dashboard/doctor/_teeth-creation-modal.html.twig') }}
 {% endblock %}

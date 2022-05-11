@@ -9,16 +9,12 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReservationType extends AbstractType
@@ -41,12 +37,14 @@ class ReservationType extends AbstractType
                 'html5' => false,
                 'input' => 'datetime_immutable',
                 'mapped' => false,
+                'label' => 'Date'
             ])
             ->add('startTime', TimeType::class, [
                 'widget' => 'single_text',
                 'mapped' => false,
                 'html5' => false,
                 'input' => 'datetime_immutable',
+                'label' => 'Time'
             ])
             ->add('user', EntityType::class, [
                 'label' => 'Patient',

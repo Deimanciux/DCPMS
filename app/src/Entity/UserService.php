@@ -15,11 +15,16 @@ class UserService
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private User $user;
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private $service;
+
+    public function __toString(): string
+    {
+       return $this->getUser()->getFullName();
+    }
 
     public function getId(): ?int
     {

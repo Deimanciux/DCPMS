@@ -26,7 +26,7 @@ class HealthRecordUpdater
 
         $existingHealthRecord
             ->setUser($healthRecord->getUser())
-            ->setPosition($healthRecord->getPosition())
+            ->setTooth($healthRecord->getTooth())
             ->setNotes($healthRecord->getNotes())
             ->setDiagnosis($healthRecord->getDiagnosis())
             ->setDoctor($healthRecord->getDoctor())

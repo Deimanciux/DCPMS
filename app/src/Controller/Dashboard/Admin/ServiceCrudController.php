@@ -7,6 +7,7 @@ use App\Form\ServiceImageType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -33,7 +34,8 @@ class ServiceCrudController extends AbstractCrudController
                 ->onlyOnForms(),
             CollectionField::new('serviceImages')
                 ->setTemplatePath('admin/_service_images.html.twig')
-                ->onlyOnDetail()
+                ->onlyOnDetail(),
+            AssociationField::new('users')->setFormTypeOption('by_reference', false)
         ];
     }
 

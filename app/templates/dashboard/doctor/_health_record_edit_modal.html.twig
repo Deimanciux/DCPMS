@@ -8,9 +8,10 @@
             </div>
             <div class="modal-body">
                 {{ form_start(form) }}
-                {{ form_row(form.position) }}
+                {{ form_row(form.tooth) }}
                 {{ form_row(form.diagnosis) }}
                 {{ form_row(form.notes) }}
+                {{ form_widget(form.isRemoved) }}
                 {{ form_row(form.user) }}
                 {{ form_row(form.id) }}
             </div>

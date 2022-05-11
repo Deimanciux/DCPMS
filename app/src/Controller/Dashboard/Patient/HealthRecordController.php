@@ -6,7 +6,7 @@ namespace App\Controller\Dashboard\Patient;
 
 use App\Entity\User;
 use App\Repository\HealthRecordRepository;
-use App\Repository\PositionRepository;
+use App\Repository\ToothRepository;
 use App\Voter\HealthRecordVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ class HealthRecordController extends AbstractController
 {
     public function __construct(
         private HealthRecordRepository $healthRecordRepository,
-        private PositionRepository $positionRepository,
+        private ToothRepository $toothRepository
     ) {
     }
 
@@ -32,12 +32,13 @@ class HealthRecordController extends AbstractController
         $user = $this->getUser();
 
         $healthRecords = $this->healthRecordRepository->findBy(['user' => $user]);
-        $positions = $this->positionRepository->findBySequenceNumber();
+        $teethBySequence = $this->toothRepository->getTeethBySequence();
 
         return $this->render('dashboard/patient/health-record.html.twig', [
             'records' => $healthRecords,
-            'positions' => $positions,
-            'patient' => $user->getId()
+            'teeth' => $teethBySequence,
+            'patient' => $user->getId(),
+            'patientUser' => $user
         ]);
     }
 
@@ -50,16 +51,13 @@ class HealthRecordController extends AbstractController
 
         $user = $this->getUser();
 
-        $position = $this->positionRepository->findOneBy([
-            'position' => $positionNumber
-        ]);
-
-        $healthRecords = $this->healthRecordRepository->findBy([
-            'position' => $position,
-            'user' => $patient
-        ],
-            ['updatedAt' => 'desc']
-        );
+        $healthRecords = [];
+        foreach ($patient->getTeeth() as $tooth) {
+            if ($tooth->getPosition()->getPosition() === $positionNumber) {
+                $healthRecords = $tooth->getHealthRecords()->toArray();
+                break;
+            }
+        }
 
         return $this->json ([
             'data' => $this->renderTemplateByRole($user, $healthRecords),
