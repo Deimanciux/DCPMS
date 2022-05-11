@@ -8,8 +8,10 @@
                 <h1 class="title">Health records</h1>
             </div>
             <div class="col-6 text-right">
-                <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
-                <button type="button" id="new-health-record" data-user="{{ app.user.id }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
+                {% if patientUser.teeth|length != 0 %}
+                    <button type="button" id="show-all-records" class="btn btn-primary">Show all records</button>
+                    <button type="button" id="new-health-record" data-user="{{ app.user.id }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#healthRecordModal" data-bs-whatever="@mdo">New health record</button>
+                {% endif %}
                 {% if patientUser.teeth | length == 0 %}
                     <button type="button" id="new-health-record" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#teethModal" data-bs-whatever="@mdo">Create teeth table</button>
                 {% endif %}

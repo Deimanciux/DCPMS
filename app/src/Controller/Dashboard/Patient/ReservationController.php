@@ -244,6 +244,7 @@ class ReservationController extends AbstractController
             7 => "Sunday",
         ];
 
+        $currentUser = $this->getUser();
         $dayOfWeek = date("l", $date->getTimestamp());
         $weekDayNumber = array_flip($weekDays)[$dayOfWeek];
         $workSchedule = $this->workScheduleRepository->findOneBy(['user' => $doctor, 'weekDay' => $weekDayNumber]);
@@ -252,6 +253,13 @@ class ReservationController extends AbstractController
         $workTo = $workSchedule?->getWorkTo($date) ?? new \DateTimeImmutable($date->format('Y-m-d') . ' 18:00');
         $reservations = $this->reservationRepository->getReservationsByDate($doctor, $date);
         $reservationCount = count($reservations);
+
+        if (in_array(User::ROLE_PATIENT, $currentUser->getRoles(), true)) {
+            $reservations = array_merge($this->reservationRepository->getUserReservationsByDate($currentUser, $date), $reservations);
+            $reservationCount = count($reservations);
+        }
+
+//        dd($this->reservationRepository->getUserReservationsByDate($currentUser, $date));
 
         $availableTime = [];
         /**

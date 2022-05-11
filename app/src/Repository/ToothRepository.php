@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Tooth;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -45,10 +46,12 @@ class ToothRepository extends ServiceEntityRepository
         }
     }
 
-    public function getTeethBySequence()
+    public function getTeethBySequence(User $user)
     {
         return $this->createQueryBuilder('t')
             ->innerJoin('t.position', 'p')
+            ->where('t.user = :user')
+            ->setParameter('user', $user)
             ->orderBy('p.sequenceNumber', 'asc')
             ->getQuery()
             ->getResult();

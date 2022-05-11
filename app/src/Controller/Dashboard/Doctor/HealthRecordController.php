@@ -89,7 +89,7 @@ class HealthRecordController extends AbstractController
         $form = $this->createForm(HealthRecordType::class, $healthRecord);
         $teethForm = $this->createForm(ToothTableType::class);
         $healthRecords = $user->getHealthRecords();
-        $teethBySequence = $this->toothRepository->getTeethBySequence();
+        $teethBySequence = $this->toothRepository->getTeethBySequence($user);
         $form->handleRequest($request);
         $teethForm->handleRequest($request);
         $doctor = $this->getUser();
