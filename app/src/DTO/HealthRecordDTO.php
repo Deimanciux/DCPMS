@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\DTO;
 
 use App\Entity\Diagnosis;
-use App\Entity\Position;
+use App\Entity\Tooth;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class HealthRecordDTO
@@ -13,7 +13,7 @@ class HealthRecordDTO
     public function __construct(
         private int $id,
         private UserInterface $user,
-        private Position $position,
+        private Tooth $tooth,
         private string $notes,
         private Diagnosis $diagnosis,
         private UserInterface $doctor
@@ -30,9 +30,9 @@ class HealthRecordDTO
         return $this->user;
     }
 
-    public function getPosition(): Position
+    public function getTooth(): Tooth
     {
-        return $this->position;
+        return $this->tooth;
     }
 
     public function getNotes(): string

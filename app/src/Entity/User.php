@@ -90,6 +90,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WorkSchedule::class)]
     private $workSchedules;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Tooth::class, orphanRemoval: true)]
+    private $teeth;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -99,6 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->healthRecords = new ArrayCollection();
         $this->doctorHealthRecords = new ArrayCollection();
         $this->workSchedules = new ArrayCollection();
+        $this->teeth = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -487,5 +491,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Tooth>
+     */
+    public function getTeeth(): Collection
+    {
+        return $this->teeth;
+    }
+
+    public function addTooth(Tooth $tooth): self
+    {
+        if (!$this->teeth->contains($tooth)) {
+            $this->teeth[] = $tooth;
+            $tooth->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTooth(Tooth $tooth): self
+    {
+        if ($this->teeth->removeElement($tooth)) {
+            // set the owning side to null (unless already changed)
+            if ($tooth->getUser() === $this) {
+                $tooth->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isPatient(): bool
+    {
+        return in_array(self::ROLE_PATIENT, $this->roles, true);
     }
 }

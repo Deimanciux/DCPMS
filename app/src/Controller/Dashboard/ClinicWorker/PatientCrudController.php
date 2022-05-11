@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
 class PatientCrudController extends AbstractCrudController
@@ -49,5 +50,13 @@ class PatientCrudController extends AbstractCrudController
             });
 
         return $actions->add(Crud::PAGE_INDEX, $viewReservations);
+    }
+
+    public function configureFields(string $pageName): iterable
+    {
+        $fields =  parent::configureFields($pageName);
+        $fields[] = BooleanField::new('isVerified');
+
+        return $fields;
     }
 }

@@ -89,9 +89,24 @@ class ReservationController extends AbstractController
             );
         }
 
+        $hoursByDays = [];
+        if (\in_array(User::ROLE_DOCTOR, $this->getUser()->getRoles(), true)) {
+            /**
+             * @var WorkSchedule $workSchedule
+             */
+            foreach ($this->getUser()->getWorkSchedules() as $workSchedule) {
+                $hoursByDays[$workSchedule->getWeekDay()] = [
+                    'from' => $workSchedule->getWorkFrom()->format('H:i'),
+                    'to' => $workSchedule->getWorkTo()->format('H:i'),
+                ];
+            }
+        }
+
         return $this->render('dashboard/reservation_calendar.html.twig', [
             'form' => $form->createView(),
-            'user' => $user->getId()
+            'user' => $user->getId(),
+            'patientUser' => $user,
+            'hoursByDays' => $hoursByDays,
         ]);
     }
 
@@ -149,9 +164,9 @@ class ReservationController extends AbstractController
     #[Route('/reservation/{id}', name: 'delete_reservation', methods:"DELETE")]
     public function deleteReservation(Reservation $reservation): Response
     {
-        if ($this->isGranted(ReservationVoter::EDIT)) {
-            return $this->json(['error' => true], Response::HTTP_FORBIDDEN);
-        }
+//        if ($this->isGranted(ReservationVoter::EDIT)) {
+//            return $this->json(['error' => true,], Response::HTTP_FORBIDDEN);
+//        }
 
         $this->entityManager->remove($reservation);
         $this->entityManager->flush();
@@ -216,7 +231,7 @@ class ReservationController extends AbstractController
         return $reservation->getStartDate()->modify('+' . $reservation->getService()->getDuration() . 'minutes');
     }
 
-    #[Route('/reservation/time/{date}/doctor/{doctor}/service/{service}', name: 'delete_reservation', methods:"GET")]
+    #[Route('/reservation/time/{date}/doctor/{doctor}/service/{service}', name: 'get_time_slots_reservation', methods:"GET")]
     public function getAvailableTimeSlots(\DateTimeImmutable $date, User $doctor, Service $service): Response
     {
         $weekDays = [

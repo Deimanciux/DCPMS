@@ -45,32 +45,12 @@ class ToothRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Tooth[] Returns an array of Tooth objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getTeethBySequence()
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('t.position', 'p')
+            ->orderBy('p.sequenceNumber', 'asc')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Tooth
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
